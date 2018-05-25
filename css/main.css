@@ -1087,7 +1087,7 @@ pre .javascript .function {
   bottom: 19px;
 }
 .header {
-  background: url("http://od2xrf8gr.bkt.clouddn.com/background2.png");
+  background: url("/images/banner.jpg");
 }
 .header-inner {
   position: relative;
@@ -1966,7 +1966,7 @@ img:hover {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #131b7d;
+  background: #8149b1;
 }
 .links-of-blogroll {
   font-size: 13px;
