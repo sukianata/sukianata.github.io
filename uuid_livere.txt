@@ -1,0 +1,18 @@
+<!-- ?必力City版安?代? -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNjgwNy8xMzM0Mw==">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> ?正常使用?必力??功能?激活JavaScript</noscript>
+</div>
+<!-- City版安?代?已完成 -->
