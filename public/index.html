@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Java">
+<meta property="og:type" content="website">
+<meta property="og:title" content="清露晨流，新桐初引">
+<meta property="og:url" content="http://sukianata.coding.me/index.html">
+<meta property="og:site_name" content="清露晨流，新桐初引">
+<meta property="og:description" content="Java">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="清露晨流，新桐初引">
+<meta name="twitter:description" content="Java">
+
+
+
+
+
+
+  <link rel="canonical" href="http://sukianata.coding.me/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>清露晨流，新桐初引</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">清露晨流，新桐初引</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">boring,boring,boring</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home menu-item-active">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />Commonweal 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/05/31/javaweb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/31/javaweb/" itemprop="url">
+                  javaweb
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/05/31 15:21:42 / Modified: 15:22:31" itemprop="dateCreated datePublished" datetime="2018-05-31T15:21:42+08:00">2018/05/31</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><em>這部分主要涉及在做java web開發過程中涉及到的知識。</em></p>
+<p>###java web</p>
+<ol>
+<li><p>###XML文檔定義和解析有幾種形式？它們之間有何本質區別<br> 約束有DTD和Schema兩種形式，Schema本身也是xml文件，約束能力更強。<br> 解析xml主要有DOM，SAX,StAx(java6引入)。<br> 其中DOM在處理大型文件時性能下降厲害，因為DOM樹結構佔用的內存較多，解析前必須將整個文檔裝入內存，適合對xml的隨機訪問。<br> SAX是事件驅動型解析方式，順序讀取，遇見開頭、結束或開頭標籤結束標籤時會觸發一個事件，用戶通過回調代碼來處理xml文件。</p>
+</li>
+<li><p>####簡述jdbc操作數據庫的步驟<br>2.1 加載驅動  </p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">	Class.forName(<span class="string">"oracle.jdbc.driver.OracleDriver"</span>);</span><br><span class="line">	```  </span><br><span class="line">  <span class="number">2.2</span> 創建連接  </span><br><span class="line">  </span><br><span class="line">	```Connection con =　DriverManager.getConnection(<span class="string">"jdbc:oracle:thin@localhost:1521:orcl"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);```   </span><br><span class="line">  <span class="number">2.3</span> 創建語句</span><br><span class="line">	&lt;pre&gt;</span><br><span class="line">	 PreparedStatement ps =con.prePareStatement(<span class="string">"select * from table_Name"</span>)</span><br><span class="line">	<span class="comment">//設置參數的方式：ps.setInt(index,value);index從1開始</span></span><br><span class="line">	&lt;/pre&gt;   </span><br><span class="line">  <span class="number">2.4</span> 執行語句  </span><br><span class="line"></span><br><span class="line">	```ResultSet rs =ps.executeQuery();```  </span><br><span class="line">  <span class="number">2.5</span> 處理結果  </span><br><span class="line">	&lt;pre&gt;</span><br><span class="line">		<span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">		  <span class="comment">//do something here </span></span><br><span class="line">		  System.out.println(rs.getString(<span class="string">"name"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">	&lt;/pre&gt;</span><br><span class="line">  <span class="number">2.6</span> 關閉資源  </span><br><span class="line"></span><br><span class="line">	提示：關閉外部資源的順序和打開的順序相反。  </span><br><span class="line">  </span><br><span class="line">3. ####Statement和PrepareStatement區別。</span><br><span class="line">	* 後者為預編譯，可增加安全性，且可帶參數。</span><br><span class="line">	* 當批量處理SQL或頻繁執行相同的查詢時，後者有明顯性能上的優勢，因為數據庫可將編譯優化后的SQL語句緩存起來。</span><br><span class="line">	* 調用存儲過程通過CallableStatement接口  </span><br><span class="line">	</span><br><span class="line">4. ####使用JDBC時，如何提升讀取和更新數據的性能？  </span><br><span class="line">	* 讀取：rs.setFetchSize();指定每次抓取的記錄數。</span><br><span class="line">	* 更新：使用PrepareStatement構建批量處理。</span><br><span class="line"></span><br><span class="line">5. ####數據庫連接池的作用</span><br><span class="line">	減少性能開銷。</span><br><span class="line">	創建鏈接需要進行TCP的三次握手，釋放鏈接四次。</span><br><span class="line">	有關TCP握手，點擊[這裡(待補充)](http:<span class="comment">//www.baidu.com)  </span></span><br><span class="line">6. ####事物的ACID指什麼？  </span><br><span class="line">	* Atiomic:原子性。事物中每個操作，要麼全做要麼全不做。  </span><br><span class="line">	* Consistent:一致性。事物結束后系統狀態是一致的。</span><br><span class="line">	* Isolated:隔離性。并發執行的事物無法看見對方的中間狀態。</span><br><span class="line">	* Durable:持久性。事物完成后所做的改動都會被持久化。  </span><br><span class="line">	</span><br><span class="line">	補充幾個概念：</span><br><span class="line">	* 髒讀：A事物讀取B事物尚未提交的數據，若B進行回滾，則A讀到的數據就是臟數據。</span><br><span class="line">	* 不可重複讀：事物A重新讀取前面讀過的數據發現該數據已經被修改過了。</span><br><span class="line">	* 幻讀：事物A重新執行一個查詢，發現其中插入了被B提交的事物。</span><br><span class="line">	* 第<span class="number">1</span>類丟失更新：事物A撤銷時，把已經提交事物B更新的數據覆蓋了。</span><br><span class="line">	* 第<span class="number">2</span>類丟失更新：事物A覆蓋事物B已經提交的數據，造成事物B所做的操作丟失。</span><br><span class="line">	  </span><br><span class="line">	數據庫通過鎖機制來解決數據並發訪問問題，且提供自動鎖機制，只需要用戶指定會話的事物隔離級別。</span><br><span class="line">	  </span><br><span class="line">7. ####JDBC能否處理Blod和Clob </span><br><span class="line">	能。補充：Blob為二進制大對象，Clob指大字符對象。  </span><br><span class="line">8. ####獲得一個類的類對象有哪些方式</span><br><span class="line">	* String.class</span><br><span class="line">	* <span class="string">"hello"</span>.getClass()</span><br><span class="line">	* Class.forName()</span><br><span class="line">9. ####如何通過反射創建對象</span><br><span class="line">	* 通過類對象調用newInstance(),eg: ```String.class.getNewInstance();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通過類對象的getConstructor()或getDeclaredContructor()方法獲得構造器對象并調用其newInstance()方法創建對象，eg: <code>String.class.getConstructor(String.class).getNewInstance(&quot;hello&quot;);</code></li>
+</ul>
+</li>
+<li><p>簡述面向對象的六原則一法則</p>
+<ul>
+<li>單一職責原則：一個類只做它該做的事，不涉及其它無關領域。</li>
+<li>開閉原則：類應該對擴展開放，對修改關係。例如增加新功能時，只需要從原來系統派生出新類，而不需要修改原有代碼</li>
+<li>依賴倒轉原則：面向接口編程。</li>
+<li>里氏替換原則：簡單的說，就是能用父類型的地方就一定能使用子類型。</li>
+<li>接口隔離原則：接口要小而專，不能大而全。</li>
+<li>合成聚合原則： 優先使用聚合或合成關係複用代碼，例如工具類可以拿來直接用，不需要繼承。</li>
+<li>迪米特法則：又稱最少知識原則，一個對象應當對其它對象有可能少的了解。</li>
+</ul>
+</li>
+<li><p>####簡述你了解的的設計模式。<br>有關於23種設計模式，點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡(待補充)</a><br>挑常用的兩三個記住並可以寫出demo來。</p>
+</li>
+<li>####列舉一些java中常用的排序算法<br>有關於常用的排序算法，點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡(待補充)</a><br>挑常用的兩個記住並能寫出來。例如冒泡排序。</li>
+<li>####列舉一些java中常用的查找算法<br>有關於常用的查找算法，點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡(待補充)</a><br>挑常用的兩個記住並能寫出來。例如二分查找。 </li>
+<li>####實現會話跟蹤的技術有哪些 <ul>
+<li>url重寫：將唯一的繪畫ID添加到url結尾</li>
+<li>設置隱藏表單域：將繪話相關的字段添加到隱式表單域中，這些信息提交表單會提交給服務器。</li>
+<li>cookie:<ul>
+<li>基於瀏覽器窗口，關閉后沒有了</li>
+<li>生成臨時文件<br>注意事項：不要存放敏感信息，不能存放過多內容<br>*HttpSession:最強大，功能最多，當一個用戶第一次訪問某網站時會自動創建HttpSession,放在服務器內存中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>####Hibernate的一級緩存、二級緩存和查詢緩存</p>
+<ul>
+<li>一級緩存功能默認有效。當程序保存、修改持久化實體時，Session不會立即把改變提交到數據庫，而是緩存到當前的session中，除非顯示調用session的flush方法，或關閉session.通過一級緩存可減少程序與數據庫的交互。</li>
+<li>SessionFactory的二級緩存是全局性的，所有session共享這個二級緩存，默認關閉。開啟時需要指定使用二級緩存的實體類，和二級緩存實現類，sessionFactory就會緩存訪問過該實體類的每個對象，直到緩存數據超出緩存空間。</li>
+<li>上面兩級緩存都是對整個實體進行緩存，查詢緩存可緩存普通屬性。將HQL或SQL語句及他們的查詢結果作為鍵值對進行緩存，對於同樣的查詢可以直接從緩存中獲取數據，默認關閉。</li>
+</ul>
+</li>
+<li><p>####MyBatis中使用#和$書寫佔位符的區別<br>‘#’將傳入的參數當成字符串，會自動加上引號；<br> $將參數直接顯示在生成的sql中，不安全，盡量不用<br>寫order by 時應該用$ </p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/05/31/java基礎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/31/java基礎/" itemprop="url">
+                  java基礎
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/05/31 09:34:08 / Modified: 09:35:01" itemprop="dateCreated datePublished" datetime="2018-05-31T09:34:08+08:00">2018/05/31</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="java-基礎總結"><a href="#java-基礎總結" class="headerlink" title="java 基礎總結"></a>java 基礎總結</h2><ol>
+<li><p>####面向對象的特征有哪些？</p>
+<ul>
+<li>封裝 隱藏一切可隱藏的東西，只向外提供簡單的編程接口</li>
+<li>繼承</li>
+<li>多態：方法重載和重寫</li>
+<li>抽象：只關注有哪些行為和屬性，不關注細節 </li>
+</ul>
+</li>
+<li><p>####public，private，protected以及default的區別？ </p>
+<ul>
+<li><p>橫坐標：當前類&gt;&gt;同包&gt;&gt;子類&gt;&gt;其它包  </p>
+</li>
+<li><p>縱坐標：public&gt;&gt;protected&gt;&gt;default&gt;&gt;private</p>
+</li>
+</ul>
+</li>
+<li><p>####java的數據類型</p>
+<ul>
+<li>基本類型 <ul>
+<li>int,double,byte,boolean,long,float,short,char</li>
+</ul>
+</li>
+<li>引用類型<ul>
+<li>eg:String</li>
+</ul>
+</li>
+<li>枚舉類型（java 5以後）  </li>
+</ul>
+</li>
+<li><p>####java的自動拆箱與裝箱機制</p>
+<p>  其實就是基本數據類型與引用類型的自動轉換  </p>
+</li>
+<li><p>####IntegerCache的範圍  </p>
+<p> -128~127  </p>
+</li>
+<li><p>####&amp;和&amp;&amp;的區別</p>
+<p>  &amp;是按位于；&amp;&amp;是邏輯與；按位與的作用通常作用是對某些位清零或保留某些位。  </p>
+</li>
+</ol>
+<ol start="7">
+<li><p>####stack,heap和meathod area 的用法</p>
+<p> ######首先明確堆和棧存放的東西是什麼。  </p>
+<ul>
+<li>棧：基本數據類型的變量，一個對象的引用，函數調用的現場保存</li>
+<li>堆：new 或構造器創建的對象，堆是垃圾收集器管理的主要區域</li>
+<li><p>方法區：方法區和堆都是各個線程共享的內存區域。用於存儲已經被jvm加載的類信息，常量，靜態變量登數據。字面量如”hello”,100等是放在常量池中，jdk1.7以前常量池是方法區的一部分，1.7以後常量池在堆中。  </p>
+<p>######他們的特點是什麼？  </p>
+<p>棧後進先出，空間小，操作起來速度快，大量的對象存在堆空間，他們的大小可通過jvm的啟動參數來調整，棧空間用光了，會引發StackOverflowError，而堆和常量池空間不足會引發OutofMemoryError </p>
+</li>
+</ul>
+</li>
+<li><p>####java四捨五入的原理是什麼？ </p>
+<p> 加0.5然後向下取整。  </p>
+</li>
+<li><p>####switch可以作用在哪些類型的變量上？  </p>
+<p> java5以前：byte,short,char,int.<br> java5:引入枚舉類型<br> java7:引入String類型  </p>
+</li>
+<li><p>####==和equal的區別 </p>
+<p>==看看左右是不是一個東西，equal是看左右是否長的一樣。<br>若x,y滿足x.equals(y)==true,則他們的hash code 一定相同，反過來不成立。<br>有關==和equals的更詳細總結，可參考<a href="www.baidu.com">這裡</a>  </p>
+</li>
+<li><p>####java到底是值傳遞還是引用傳遞？  </p>
+<p>值傳遞。首先明確值傳遞和引用傳遞的概念：  </p>
+<ul>
+<li>值傳遞：表示方法接收的是調用者提供的值</li>
+<li>引用傳遞：表示方法接收的是調用者提供的變量地址  </li>
+</ul>
+<p><strong>方法得到是所有參數值得一個拷貝，方法不能修改任何傳遞給它的參數變量的內容</strong>  </p>
+<p>因此，在java中，  </p>
+<ul>
+<li>一個方法不能修改一個基本數據類型的參數（針對參數為基本數據類型）</li>
+<li>一個方法不能讓對象參數引用一個新對象（針對參數為引用類型）    </li>
+</ul>
+<p>下面的方法解釋為什麼java中不存在引用傳遞。   </p>
+<p><pre><br>Employee a = new Employee(“tom”,20);  </pre></p>
+<p>Employee b = new Employee(“jack”,19);  </p>
+<p>public static void swap(Employee x,Employee y){    </p>
+<pre><code> Employee temp=x;  
+ x=y;  
+y=temp;  
+</code></pre><p>}<br><br>如果是引用傳遞，swap可以實現交換兩個對象值得效果，然而最終結果是swap并沒有改變存儲在a和b中的對象引用，x和y被初始化位兩個對象引用的拷貝。  </p>
+</li>
+<li><p>####String、StringBuilder、StringBuffer的區別  </p>
+<p>String只讀。其餘兩種可對字符串進行修改，StringBuilder（1.5引入）和StringBuffer完全相同，區別在於StringBuilder線程不安全，效率比StringBuffer高。</p>
+</li>
+<li><p>####重載和重寫的區別<br>重載發生在同一個類中，重寫發生在子類與父類之間，前者是編譯時多態性，（編譯時就知道要調用哪一個方法），後者是運行時多態性。</p>
+</li>
+<li><p>####JVM加載class文件的原理機制</p>
+<p>類的裝載有類加載器（ClassLoader)和它的子類實現。過程如下:  </p>
+<p><strong>加載</strong>：把.class文件中的數據讀到內存中  </p>
+<p>&nbsp;&nbsp;|<br>&nbsp;&nbsp;|    </p>
+<p><strong>連接</strong>：（驗證、準備、解析）為靜態變量分配內存，并設置默認的初始值，將符號引用替換為直接引用。  </p>
+<p>&nbsp;&nbsp;|<br>&nbsp;&nbsp;|  </p>
+<p><strong>初始化</strong>：</p>
+<ul>
+<li>如果類存在直接的父類且這個父類還未初始化，則先初始化父類</li>
+<li>如果類中存在初始化語句則依次執行  </li>
+</ul>
+</li>
+<li><p>####如何實現對象的克隆<br>此處列舉深度克隆的方式。<br><pre><br>public static <t extends="" serializable=""> T clone(T obj) throws Exception(){<br>  //將對象寫入流中<br>  ByteOutputStream bout = new ByteArrayOutputStream();<br>  ObjectOutputStream oos = new ObjectOutputStram(bout);<br>  oos.write(obj);<br>  //從流中讀取對象<br>  ByteInputStream bin = new ByteArrayInputStream(bout.toByteArray());<br>  ObjectInputStream ois = new ObjectInputStream(bin);<br>  return (T)ois.readObject();<br>}<br></t></pre><br>參考 <a href="https://www.cnblogs.com/Qian123/p/5710533.html" target="_blank" rel="noopener">實現對象克隆的兩種方式</a></p>
+</li>
+<li><p>####常見的異常分類<br>關於Exception更多詳細信息點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡</a>  </p>
+</li>
+<li><p>####闡述ArrayList、Vector、LinkedList的存儲性能和特性</p>
+<ul>
+<li><p>ArrayList和Vector都是使用數組的方式來存儲數據，查詢速度快，插入數據慢。  </p>
+</li>
+<li><p>Vector的方法有synchronized 修飾，性能上比ArrayList差。  </p>
+</li>
+<li><p>LinkedList使用雙向鏈錶實現存儲。插入速度快。</p>
+</li>
+<li><p>Vector,Hashtable,Dictionary,BitSet,Stack,Properties是遺留容器，不推薦使用。  </p>
+</li>
+<li><p>ArrayList和LinkedList都是非線程安全的，可用Collections中synchronizedList方法變為線程安全的</p>
+</li>
+</ul>
+</li>
+<li><p>####Colledtion和Collections的區別<br>Collection是Set,List登容器的父接口；Collections是一個工具類，提供靜態方法來輔助容器操作。</p>
+</li>
+<li><p>####TreeMap和TreeSet在排序時如何比較元素？Collections工具類中的sort()方法如何比較元素？<br>簡單記：  </p>
+<ul>
+<li><p>實現Comparable接口，重寫compareTo方法  </p>
+</li>
+<li><p>採用Collections中sort方法，如下 </p>
+  <pre>  
+  //obj為要排序的對象，第二個參數為自定義的排序規則
+  Collections.sort(obj,new Comparator<object>(){  
+      public int compare(Object o1,Object o2){  
+          return o1.hashCode()-o2.hashCode();
+      }
+  }  
+  </object></pre>    
+</li>
+</ul>
+</li>
+<li><p>####Thread類的sleep()方法和對象的wait()方法都可以讓線程暫停執行，它們有什麼區別？<br>它們的共同點是調用此方法會讓當前線程暫停執行制定的時間。</p>
+<ul>
+<li>sleep方法是Thread類的靜態方法，但對象鎖依然保持。</li>
+<li>wait()方法是Object類的方法，調用后會放棄當前對象的鎖，進入對象的等待池，只有調用對象的nodify()或notifYAll()才能喚醒等待池中的線程進入等鎖池，如果線程重新獲得對象的鎖就可以進入就緒狀態。</li>
+</ul>
+</li>
+<li><p>####sleep方法和yield方法有什麼區別？</p>
+<ul>
+<li>sleep給其它線程運行時會不考慮線程優先級，會給底優先級線程以運行的機會，yield只能把機會給相同優先級或更高優先級的線程</li>
+<li>線程執行sleep后進入阻塞狀態，執行yield方法后進入就緒狀態</li>
+<li>sleep方法需要拋出InterruptedException</li>
+<li>sleep方法比yield（跟操作系統的cpu有關）具有更好的移植性  </li>
+</ul>
+</li>
+<li><p>####請說出與線程同步以及線程調度相關的方法</p>
+<ul>
+<li>wait():使一個線程處於阻塞狀態，並且釋放對象所持有的鎖；</li>
+<li>sleep():讓線程進入睡眠狀態</li>
+<li>notify():喚醒一個處於等待狀態的線程，但不能確切的喚醒某一個等待的線程，而是有JVM確定</li>
+<li>notifyAll():喚醒所有處於等待狀態的線程，該方法並不是將對象的鎖給所有線程，而是讓他們去競爭，只有獲得鎖的線程才能進入就緒狀態。</li>
+</ul>
+</li>
+<li><p>####編寫多線程有幾種實現方法<br>java5以前有兩種：</p>
+<ul>
+<li>繼承Thread類</li>
+<li>實現Runnable接口<br>兩種方式都需要通過重寫run()方法來定義線程的行為，後者更加靈活<br>java5以後還可以通過：實現Callable和ExecutorService等來創建（待補充）。</li>
+</ul>
+</li>
+<li><p>####什麼是線程池？<br>“池化技術”產生的原因：盡可能的減少對象創建和銷毀的次數，從而減少資源的消耗。如線程池，數據庫連接池。<br>線程池就是事先創建若干個可執行的線程放入一個容器中，需要的時候從池中獲取而不需要自行創建，使用完放回池中。<br>線程工具類Executors提供一些靜態工廠方法，生成一些常用的線程池。</p>
+<ul>
+<li>newSingleThreadExecutor：單線程線程池，該線程池保證所有任務的執行順序按照任務的提交順序執行。一個不行了另一個接著上。</li>
+<li>newFixedThreadPool:創建固定大小的線程池，線程池大小一旦達到最大值就保持不變。</li>
+<li>newCachedThreadPool:可緩存的線程池。當線程池大小超過處理任務所需線程數，則回收空閒線程，若不夠用，則新建線程來補充    ，最終線程池大小取決於jvm能夠創建的最大線程數</li>
+<li>newScheduledThreadPool:創建一個大小無線的線程池。該線程池支持定時以及週期性執行任務的需求。     </li>
+</ul>
+</li>
+<li><p>####線程的基本狀態以及狀態之間的關係<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/Thread.png" alt=""><br>說明：  </p>
+<pre>
+     Blocked in Object's Wait Pool  對象等待池  
+     Blocked in Object's Lock Pool    等鎖池  
+      Runnable                       就緒狀態  
+     Running                        運行狀態
+     Blocked                        阻塞狀態
+</pre>  </li>
+<li><p>####synchronized和java.util.concurrent.locks.Lock的異同<br>Lock能完成synchronized所實現的所有功能。主要不同點：Lock有比synchronized更精確的線程語義和更好的性能，而且不強制性的要求一定要獲得鎖。synchronized會自動釋放鎖，而Lock一定要求程序員手工釋放。</p>
+</li>
+<li><p>java中有幾種類型的流<br>字節流和字符流。字節流繼承于InputStream,OutputStream,字符流繼承與Reader,Writer。<br>編程實現文件拷貝，此處列出NIO的形式。<br><pre><br>public static void fileCopyNIO(String soure,String target) throws IOException{<br>  try(FileInputStram in =new FileInputStream(source)){</pre></p>
+<pre><code>try(FileOutputStream out = new FileOutputStream(target)){
+    FileChannel inChannel = in.getChannel();
+    FileChannel outChannel =out.getChannel();
+    ByteBuffer buffer = ByteBuffer.allocate(4096);
+    while(inChannel.read(buffer) !=-1){
+        buffer.flip();
+        outChannel.write(buffer);    
+        buffer.clear();
+    }
+ }
+</code></pre><p>  }<br>}<br><br>此處用到了java7的新特性try…with..resource格式。</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/05/30/push-test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/30/push-test/" itemprop="url">
+                  push test
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/05/30 15:51:51 / Modified: 15:52:54" itemprop="dateCreated datePublished" datetime="2018-05-30T15:51:51+08:00">2018/05/30</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>this is a  push test</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/05/22/Test2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/22/Test2/" itemprop="url">
+                  Test2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/05/22 14:07:01 / Modified: 16:49:38" itemprop="dateCreated datePublished" datetime="2018-05-22T14:07:01+08:00">2018/05/22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/catTest/" itemprop="url" rel="index"><span itemprop="name">catTest</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          中文測試
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/22/Test2/">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/05/22/This-is-a-test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/22/This-is-a-test/" itemprop="url">
+                  This is a test
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/05/22 14:07:01 / Modified: 16:49:44" itemprop="dateCreated datePublished" datetime="2018-05-22T14:07:01+08:00">2018/05/22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/catTest/" itemprop="url" rel="index"><span itemprop="name">catTest</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          中文測試
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/22/This-is-a-test/">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+
+
+          </div>
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">HuangFan</p>
+              <p class="site-description motion-element" itemprop="description">Java</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/Categories/index.html">
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/Tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/man-tou-hao-chi-bu/activities" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangFan</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

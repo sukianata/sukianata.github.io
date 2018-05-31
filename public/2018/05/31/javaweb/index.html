@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="這部分主要涉及在做java web開發過程中涉及到的知識。 ###java web  ###XML文檔定義和解析有幾種形式？它們之間有何本質區別 約束有DTD和Schema兩種形式，Schema本身也是xml文件，約束能力更強。 解析xml主要有DOM，SAX,StAx(java6引入)。 其中DOM在處理大型文件時性能下降厲害，因為DOM樹結構佔用的內存較多，解析前必須將整個文檔裝入內存，適合對">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javaweb">
+<meta property="og:url" content="http://sukianata.coding.me/2018/05/31/javaweb/index.html">
+<meta property="og:site_name" content="清露晨流，新桐初引">
+<meta property="og:description" content="這部分主要涉及在做java web開發過程中涉及到的知識。 ###java web  ###XML文檔定義和解析有幾種形式？它們之間有何本質區別 約束有DTD和Schema兩種形式，Schema本身也是xml文件，約束能力更強。 解析xml主要有DOM，SAX,StAx(java6引入)。 其中DOM在處理大型文件時性能下降厲害，因為DOM樹結構佔用的內存較多，解析前必須將整個文檔裝入內存，適合對">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-05-31T07:22:31.921Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javaweb">
+<meta name="twitter:description" content="這部分主要涉及在做java web開發過程中涉及到的知識。 ###java web  ###XML文檔定義和解析有幾種形式？它們之間有何本質區別 約束有DTD和Schema兩種形式，Schema本身也是xml文件，約束能力更強。 解析xml主要有DOM，SAX,StAx(java6引入)。 其中DOM在處理大型文件時性能下降厲害，因為DOM樹結構佔用的內存較多，解析前必須將整個文檔裝入內存，適合對">
+
+
+
+
+
+
+  <link rel="canonical" href="http://sukianata.coding.me/2018/05/31/javaweb/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>javaweb | 清露晨流，新桐初引</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">清露晨流，新桐初引</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">boring,boring,boring</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />Commonweal 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/05/31/javaweb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">javaweb
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/05/31 15:21:42 / Modified: 15:22:31" itemprop="dateCreated datePublished" datetime="2018-05-31T15:21:42+08:00">2018/05/31</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>這部分主要涉及在做java web開發過程中涉及到的知識。</em></p>
+<p>###java web</p>
+<ol>
+<li><p>###XML文檔定義和解析有幾種形式？它們之間有何本質區別<br> 約束有DTD和Schema兩種形式，Schema本身也是xml文件，約束能力更強。<br> 解析xml主要有DOM，SAX,StAx(java6引入)。<br> 其中DOM在處理大型文件時性能下降厲害，因為DOM樹結構佔用的內存較多，解析前必須將整個文檔裝入內存，適合對xml的隨機訪問。<br> SAX是事件驅動型解析方式，順序讀取，遇見開頭、結束或開頭標籤結束標籤時會觸發一個事件，用戶通過回調代碼來處理xml文件。</p>
+</li>
+<li><p>####簡述jdbc操作數據庫的步驟<br>2.1 加載驅動  </p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">	Class.forName(<span class="string">"oracle.jdbc.driver.OracleDriver"</span>);</span><br><span class="line">	```  </span><br><span class="line">  <span class="number">2.2</span> 創建連接  </span><br><span class="line">  </span><br><span class="line">	```Connection con =　DriverManager.getConnection(<span class="string">"jdbc:oracle:thin@localhost:1521:orcl"</span>,<span class="string">"root"</span>,<span class="string">"root"</span>);```   </span><br><span class="line">  <span class="number">2.3</span> 創建語句</span><br><span class="line">	&lt;pre&gt;</span><br><span class="line">	 PreparedStatement ps =con.prePareStatement(<span class="string">"select * from table_Name"</span>)</span><br><span class="line">	<span class="comment">//設置參數的方式：ps.setInt(index,value);index從1開始</span></span><br><span class="line">	&lt;/pre&gt;   </span><br><span class="line">  <span class="number">2.4</span> 執行語句  </span><br><span class="line"></span><br><span class="line">	```ResultSet rs =ps.executeQuery();```  </span><br><span class="line">  <span class="number">2.5</span> 處理結果  </span><br><span class="line">	&lt;pre&gt;</span><br><span class="line">		<span class="keyword">while</span>(rs.next())&#123;</span><br><span class="line">		  <span class="comment">//do something here </span></span><br><span class="line">		  System.out.println(rs.getString(<span class="string">"name"</span>));</span><br><span class="line">		&#125;</span><br><span class="line">	&lt;/pre&gt;</span><br><span class="line">  <span class="number">2.6</span> 關閉資源  </span><br><span class="line"></span><br><span class="line">	提示：關閉外部資源的順序和打開的順序相反。  </span><br><span class="line">  </span><br><span class="line">3. ####Statement和PrepareStatement區別。</span><br><span class="line">	* 後者為預編譯，可增加安全性，且可帶參數。</span><br><span class="line">	* 當批量處理SQL或頻繁執行相同的查詢時，後者有明顯性能上的優勢，因為數據庫可將編譯優化后的SQL語句緩存起來。</span><br><span class="line">	* 調用存儲過程通過CallableStatement接口  </span><br><span class="line">	</span><br><span class="line">4. ####使用JDBC時，如何提升讀取和更新數據的性能？  </span><br><span class="line">	* 讀取：rs.setFetchSize();指定每次抓取的記錄數。</span><br><span class="line">	* 更新：使用PrepareStatement構建批量處理。</span><br><span class="line"></span><br><span class="line">5. ####數據庫連接池的作用</span><br><span class="line">	減少性能開銷。</span><br><span class="line">	創建鏈接需要進行TCP的三次握手，釋放鏈接四次。</span><br><span class="line">	有關TCP握手，點擊[這裡(待補充)](http:<span class="comment">//www.baidu.com)  </span></span><br><span class="line">6. ####事物的ACID指什麼？  </span><br><span class="line">	* Atiomic:原子性。事物中每個操作，要麼全做要麼全不做。  </span><br><span class="line">	* Consistent:一致性。事物結束后系統狀態是一致的。</span><br><span class="line">	* Isolated:隔離性。并發執行的事物無法看見對方的中間狀態。</span><br><span class="line">	* Durable:持久性。事物完成后所做的改動都會被持久化。  </span><br><span class="line">	</span><br><span class="line">	補充幾個概念：</span><br><span class="line">	* 髒讀：A事物讀取B事物尚未提交的數據，若B進行回滾，則A讀到的數據就是臟數據。</span><br><span class="line">	* 不可重複讀：事物A重新讀取前面讀過的數據發現該數據已經被修改過了。</span><br><span class="line">	* 幻讀：事物A重新執行一個查詢，發現其中插入了被B提交的事物。</span><br><span class="line">	* 第<span class="number">1</span>類丟失更新：事物A撤銷時，把已經提交事物B更新的數據覆蓋了。</span><br><span class="line">	* 第<span class="number">2</span>類丟失更新：事物A覆蓋事物B已經提交的數據，造成事物B所做的操作丟失。</span><br><span class="line">	  </span><br><span class="line">	數據庫通過鎖機制來解決數據並發訪問問題，且提供自動鎖機制，只需要用戶指定會話的事物隔離級別。</span><br><span class="line">	  </span><br><span class="line">7. ####JDBC能否處理Blod和Clob </span><br><span class="line">	能。補充：Blob為二進制大對象，Clob指大字符對象。  </span><br><span class="line">8. ####獲得一個類的類對象有哪些方式</span><br><span class="line">	* String.class</span><br><span class="line">	* <span class="string">"hello"</span>.getClass()</span><br><span class="line">	* Class.forName()</span><br><span class="line">9. ####如何通過反射創建對象</span><br><span class="line">	* 通過類對象調用newInstance(),eg: ```String.class.getNewInstance();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通過類對象的getConstructor()或getDeclaredContructor()方法獲得構造器對象并調用其newInstance()方法創建對象，eg: <code>String.class.getConstructor(String.class).getNewInstance(&quot;hello&quot;);</code></li>
+</ul>
+</li>
+<li><p>簡述面向對象的六原則一法則</p>
+<ul>
+<li>單一職責原則：一個類只做它該做的事，不涉及其它無關領域。</li>
+<li>開閉原則：類應該對擴展開放，對修改關係。例如增加新功能時，只需要從原來系統派生出新類，而不需要修改原有代碼</li>
+<li>依賴倒轉原則：面向接口編程。</li>
+<li>里氏替換原則：簡單的說，就是能用父類型的地方就一定能使用子類型。</li>
+<li>接口隔離原則：接口要小而專，不能大而全。</li>
+<li>合成聚合原則： 優先使用聚合或合成關係複用代碼，例如工具類可以拿來直接用，不需要繼承。</li>
+<li>迪米特法則：又稱最少知識原則，一個對象應當對其它對象有可能少的了解。</li>
+</ul>
+</li>
+<li><p>####簡述你了解的的設計模式。<br>有關於23種設計模式，點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡(待補充)</a><br>挑常用的兩三個記住並可以寫出demo來。</p>
+</li>
+<li>####列舉一些java中常用的排序算法<br>有關於常用的排序算法，點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡(待補充)</a><br>挑常用的兩個記住並能寫出來。例如冒泡排序。</li>
+<li>####列舉一些java中常用的查找算法<br>有關於常用的查找算法，點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡(待補充)</a><br>挑常用的兩個記住並能寫出來。例如二分查找。 </li>
+<li>####實現會話跟蹤的技術有哪些 <ul>
+<li>url重寫：將唯一的繪畫ID添加到url結尾</li>
+<li>設置隱藏表單域：將繪話相關的字段添加到隱式表單域中，這些信息提交表單會提交給服務器。</li>
+<li>cookie:<ul>
+<li>基於瀏覽器窗口，關閉后沒有了</li>
+<li>生成臨時文件<br>注意事項：不要存放敏感信息，不能存放過多內容<br>*HttpSession:最強大，功能最多，當一個用戶第一次訪問某網站時會自動創建HttpSession,放在服務器內存中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>####Hibernate的一級緩存、二級緩存和查詢緩存</p>
+<ul>
+<li>一級緩存功能默認有效。當程序保存、修改持久化實體時，Session不會立即把改變提交到數據庫，而是緩存到當前的session中，除非顯示調用session的flush方法，或關閉session.通過一級緩存可減少程序與數據庫的交互。</li>
+<li>SessionFactory的二級緩存是全局性的，所有session共享這個二級緩存，默認關閉。開啟時需要指定使用二級緩存的實體類，和二級緩存實現類，sessionFactory就會緩存訪問過該實體類的每個對象，直到緩存數據超出緩存空間。</li>
+<li>上面兩級緩存都是對整個實體進行緩存，查詢緩存可緩存普通屬性。將HQL或SQL語句及他們的查詢結果作為鍵值對進行緩存，對於同樣的查詢可以直接從緩存中獲取數據，默認關閉。</li>
+</ul>
+</li>
+<li><p>####MyBatis中使用#和$書寫佔位符的區別<br>‘#’將傳入的參數當成字符串，會自動加上引號；<br> $將參數直接顯示在生成的sql中，不安全，盡量不用<br>寫order by 時應該用$ </p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>我愛魯班</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="HuangFan WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/31/java基礎/" rel="next" title="java基礎">
+                <i class="fa fa-chevron-left"></i> java基礎
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjgwNy8xMzM0Mw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">HuangFan</p>
+              <p class="site-description motion-element" itemprop="description">Java</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/Categories/index.html">
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/Tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/man-tou-hao-chi-bu/activities" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangFan</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
