@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="linotp是一種強雙因子認證技術的解決方案">
+<meta name="keywords" content="LinOTP,python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinOTP服務的搭建與應用">
+<meta property="og:url" content="http://sukianata.coding.me/2018/07/09/LinOTP服務的搭建與應用/index.html">
+<meta property="og:site_name" content="清露晨流，新桐初引">
+<meta property="og:description" content="linotp是一種強雙因子認證技術的解決方案">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/201807050617.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_142100.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-07_092218.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-07_163621.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_104659.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_104809.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_141926.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_142900.png">
+<meta property="og:updated_time" content="2018-07-09T07:22:03.463Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LinOTP服務的搭建與應用">
+<meta name="twitter:description" content="linotp是一種強雙因子認證技術的解決方案">
+<meta name="twitter:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/201807050617.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://sukianata.coding.me/2018/07/09/LinOTP服務的搭建與應用/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>LinOTP服務的搭建與應用 | 清露晨流，新桐初引</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">清露晨流，新桐初引</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">boring,boring,boring</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-/tags/"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />Commonweal 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/07/09/LinOTP服務的搭建與應用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">LinOTP服務的搭建與應用
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/07/09 14:34:51 / Modified: 15:22:03" itemprop="dateCreated datePublished" datetime="2018-07-09T14:34:51+08:00">2018/07/09</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">linotp是一種強雙因子認證技術的解決方案</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="安裝"><a href="#安裝" class="headerlink" title="安裝"></a>安裝</h1><p> 首先準備好一個centos7 的系統，可選擇安裝在虛擬機上，管理員賬戶：root/123456，    普通用戶：test/123456<br> 接下來按照<a href="http://www.linotp.org" target="_blank" rel="noopener">官網</a>的安裝教程來進行安裝，若安裝過程中遇見什麼問題，再一步一步來解決。<br> 我選擇的是<a href="http://www.linotp.org/doc/latest/part-installation/server-installation/pip_install.html" target="_blank" rel="noopener">教程：the tar.gz, virtualenv and pip way</a></p>
+<ul>
+<li><p>官網上描述說LinOTP依賴于python2.7，所以先檢查python版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# python</span><br><span class="line">Python 2.7.5 (default, Aug  4 2017, 00:39:18) </span><br><span class="line">[GCC 4.8.5 20150623 (Red Hat 4.8.5-16)] on linux2</span><br><span class="line">Type "help", "copyright", "credits" or "license" for more information.</span><br><span class="line"><span class="meta">&gt;</span>&gt;&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>創建LinOTP安裝的文件夾</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkdir /opt/LINOTP</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安裝virtualenv——一個python的虛擬環境</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# yum install python-virtualenv</span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">Could not retrieve mirrorlist http://mirrorlist.centos.org/?release=7&amp;arch=x86_64&amp;repo=os&amp;infra=stock error was</span><br><span class="line">14: curl#6 - "Could not resolve host: mirrorlist.centos.org; Unknown error"</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>根據提示，意思是默認的yum源鏡像中找不到這個工具。  </p>
+<ul>
+<li>更換yum源。  </li>
+</ul>
+<p>第一步，備份原有repo.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak</span><br></pre></td></tr></table></figure></p>
+<p>第二步 下載163的源，注意系統版本，該系統為CentOS 7。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# wget http://mirrors.163.com/.help/CentOS7-Base-163.repo</span><br><span class="line">--2018-07-05 22:58:52--  http://mirrors.163.com/.help/CentOS7-Base-163.repo</span><br><span class="line">Resolving mirrors.163.com (mirrors.163.com)... failed: Name or service not known.</span><br><span class="line">wget: unable to resolve host address ‘mirrors.163.com’</span><br></pre></td></tr></table></figure></p>
+<p>報錯了，由於我用的是自己電腦上的虛擬機，懷疑是網絡的問題，因此先解決網絡問題。  </p>
+<ul>
+<li><strong>設置上網代理</strong><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# vi /etc/profile</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在文件最後加上：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy=http://10.195.11.158:808</span><br><span class="line">export https_proxy=http://10.195.11.158:808</span><br></pre></td></tr></table></figure></p>
+<p>重新執行下載163 yum源的命令，還是報相同的錯，網上說是DNS解析的問題。</p>
+<ul>
+<li><strong>設置DNS</strong><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vi /etc/resolv.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>還是不行，vmware 設置網絡適配器為Bridged模式，重啟，使用wget時，報”Connecting to 10.195.11.158:808… failed: Network is unreachable.”<br>連不上自己設置的代理。  </p>
+<ul>
+<li><p><strong>嘗試更改虛擬機ip</strong>  </p>
+<p>百度搜索’Vmware linux虚拟机设置静态IP地址’。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cd /etc/sysconfig/network-scripts/</span><br><span class="line">[root@localhost network-scripts]# vi ifcfg-ens33</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在結尾處添加如下內容：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IPADDR=10.195.11.78  </span><br><span class="line">GATEWAY=10.195.10.1</span><br><span class="line">NETMASK=255.255.255.0</span><br><span class="line">DNS1=10.195.7.75</span><br></pre></td></tr></table></figure></p>
+<p>然後重啟網絡：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost network-scripts]# service network restart</span><br><span class="line">Restarting network (via systemctl):                        [  OK  ]</span><br></pre></td></tr></table></figure></p>
+<p>再次嘗試wget，依舊報上次的錯。</p>
+<p>查看ip,是否修改成功。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# ip addr</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000</span><br><span class="line">    link/ether 00:0c:29:a2:cf:be brd ff:ff:ff:ff:ff:ff</span><br><span class="line">3: virbr0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN qlen 1000</span><br><span class="line">    link/ether 52:54:00:ff:aa:b1 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">4: virbr0-nic: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc pfifo_fast master virbr0 state DOWN qlen 1000</span><br><span class="line">    link/ether 52:54:00:ff:aa:b1 brd ff:ff:ff:ff:ff:ff</span><br></pre></td></tr></table></figure></p>
+<p>在第二項ens33處并未出現10.195.11.78字樣，可見並未修改成功。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# vi /etc/sysconfig/network-scripts/ifcfg-ens33</span><br></pre></td></tr></table></figure></p>
+<p>BOOTPROTO=static #这里讲dhcp换成ststic<br>ONBOOT=yes #将no换成yes<br>重啟網絡。再次，查看ip，修改成功。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# service network restart</span><br><span class="line">Restarting network (via systemctl):                        [  OK  ]</span><br><span class="line">[root@localhost yum.repos.d]# ip addr</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN qlen 1</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000</span><br><span class="line">    link/ether 00:0c:29:a2:cf:be brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 10.195.11.78/24 brd 10.195.11.255 scope global ens33</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::9eaf:eb54:1fbb:1b00/64 scope link </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3: virbr0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN qlen 1000</span><br><span class="line">    link/ether 52:54:00:ff:aa:b1 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">4: virbr0-nic: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc pfifo_fast master virbr0 state DOWN qlen 1000</span><br><span class="line">    link/ether 52:54:00:ff:aa:b1 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">[root@localhost yum.repos.d]#</span><br></pre></td></tr></table></figure></p>
+<p>繼續下載163鏡像，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# wget http://mirrors.163.com/.help/CentOS7-Base-163.repo</span><br><span class="line">--2018-07-06 01:03:33--  http://mirrors.163.com/.help/CentOS7-Base-163.repo</span><br><span class="line">Connecting to 10.195.11.158:808... connected.</span><br><span class="line">Proxy request sent, awaiting response... 200 OK</span><br><span class="line">Length: 1572 (1.5K) [application/octet-stream]</span><br><span class="line">Saving to: ‘CentOS7-Base-163.repo’</span><br><span class="line"></span><br><span class="line"><span class="meta">100%</span>[=============================================&gt;] 1,572       --.-K/s   in 0s      </span><br><span class="line"></span><br><span class="line">2018-07-06 01:03:33 (71.2 MB/s) - ‘CentOS7-Base-163.repo’ saved [1572/1572]</span><br></pre></td></tr></table></figure></p>
+<p>安裝virtualenv，提示’Complete!’表明安裝成功。</p>
+<ul>
+<li><p><strong>繼續下一步，Create the virtualenv:</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost LINOTP]# virtualenv --no-site-packages /opt/LINOTP</span><br><span class="line">New python executable in /opt/LINOTP/bin/python</span><br><span class="line">Installing setuptools, pip, wheel...done.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>更新pip</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost LINOTP]# cd /opt/LINOTP/</span><br><span class="line">[root@localhost LINOTP]# source bin/activate</span><br><span class="line">(LINOTP) [root@localhost LINOTP]# pip install --upgrade pip pip-tools</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>根據官網提示另外還需要安裝以下工具包：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python-dev or python-devel</span><br><span class="line">swig</span><br><span class="line">gcc</span><br><span class="line">libssl-dev or openssl-devel</span><br><span class="line">openldap-dev, libldap2-dev or openldap-devel</span><br><span class="line">mysql-server and libmysqlclient-dev or mysql-devel if you want to use mysql as token database</span><br></pre></td></tr></table></figure></p>
+<p>由於系統現有的python版本和虛擬環境中一樣，考慮就在系統環境下安裝linotp。<br>用deactivate退出虛擬環境，依次執行:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release.noarch </span><br><span class="line">yum -y install python-pip</span><br><span class="line">pip install --upgrade pip</span><br></pre></td></tr></table></figure></p>
+<p>以上兩步為安裝pip，暫未用到<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install python-devel</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install openssl-devel</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install openldap-devel</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# yum install mysql-server</span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line"> * epel: del-repos.extreme-ix.org</span><br><span class="line">No package mysql-server available.</span><br><span class="line">Error: Nothing to do</span><br><span class="line">[root@localhost ~]#</span><br></pre></td></tr></table></figure>
+<p>執行這一步時提示找不到mysql-server,原因是Centos7 版本將MySQL數據庫軟件從默認的程序列表中移除，用Mariadb代替<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install mariadb-server mariadb</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install mysql-devel</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pip install linotp</span><br></pre></td></tr></table></figure>
+<p>這一步有些耗時，運行結束后，有紅色的輸出內容，如下:<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/201807050617.png" alt=""><br>看起來是版本相關的問題。依次升級。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pip install --upgrade pyldap</span><br></pre></td></tr></table></figure></p>
+<p>又有紅色提示信息，需要先升級pyudev。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pip install --upgrade pyudev</span><br></pre></td></tr></table></figure></p>
+<p>依舊提示類似的版本依賴問題，更新dnspython<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# pip install --upgrade dnspython</span><br></pre></td></tr></table></figure></p>
+<p>執行完上一步后，再次更新pyldap 又有如下提示<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cannot uninstall 'python-ldap'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.</span><br></pre></td></tr></table></figure></p>
+<p>百度搜索原因…<br>嘗試:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install --upgrade --ignore-installed pyldap</span><br></pre></td></tr></table></figure></p>
+<p>升級成功。注意：install和–upgrade 中間要有空格，剛開始輸錯了，提示找不到install–upgrade.</p>
+<p>官網上說，如果需要使用二維碼形式的令牌比如Google Authenticato 需要如下安裝：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pil</span><br></pre></td></tr></table></figure></p>
+<p>備註：PIL，Python Imaging Libary,python平台上的圖像處理標準庫。<br>報錯了，提示：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Could not find a version that satisfies the requirement pil (from versions: )</span><br><span class="line">No matching distribution found for pil</span><br></pre></td></tr></table></figure></p>
+<p>官網上說”Or on newer distributions you should install:”猜測可能由於系統版本等原因，採用另外一種形式安裝。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install pillow</span><br><span class="line">pip install pillow-pil</span><br></pre></td></tr></table></figure></p>
+<p>猜測果然沒錯，成功。<br>如果要用到<strong><em>審計模塊</em></strong>，則需要安裝：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install m2crypto</span><br></pre></td></tr></table></figure></p>
+<p>根據想把令牌存在哪個數據庫，還需要安裝的相應的數據庫。<br>如果想用短信令牌，還需要安裝:(我們有短信服務器，此處先安裝了備用）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install SMSProvider</span><br></pre></td></tr></table></figure></p>
+<p>LinOTP提供更新命令來更新我們所安裝的依賴：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">linotp-pip-update</span><br></pre></td></tr></table></figure></p>
+<p>報錯如下，根據<a href="https://blog.csdn.net/lsp84ch80/article/details/79964655" target="_blank" rel="noopener">網上資料</a>,需要修改一下python一鍵升級腳本的源代碼。<br>進入到pip10包所在目錄，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd python2.7/site-packages/pip-10.0.1.dist-info/</span><br></pre></td></tr></table></figure></p>
+<p>進入后發現裡面并沒有源代碼，則進入到pip目錄。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost pip-10.0.1.dist-info]# cd ../pip/</span><br></pre></td></tr></table></figure></p>
+<p>尋找一鍵升級腳本的位置，網上查到該腳本名為：pip_ungrade_all.py<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name "pip_ungrade_all.py"</span><br></pre></td></tr></table></figure></p>
+<p>發現并沒有該文件，根據先前的報錯信息，猜測可能需要修改的是/usr/bin/linotp-pip-update 這個文件，於是<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vi /usr/bin/linotp-pip-update</span><br></pre></td></tr></table></figure></p>
+<p>做如下修改：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">import</span> pip</span><br><span class="line">    <span class="comment"># pip V10.0.0以上版本需要导入下面的包</span></span><br><span class="line">    <span class="keyword">from</span> pip._internal.utils.misc <span class="keyword">import</span> get_installed_distributions</span><br><span class="line">    <span class="keyword">from</span> subprocess <span class="keyword">import</span> call</span><br><span class="line">    <span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> dist <span class="keyword">in</span> pip.get_installed_distributions():</span><br><span class="line">        call(<span class="string">"pip install --upgrade "</span> + dist.project_name, shell=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p>修改后執行linotp-pip-update依舊報相同的錯，再次修改為如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pip</span><br><span class="line"><span class="comment"># pip V10.0.0以上版本需要导入下面的包</span></span><br><span class="line"><span class="keyword">from</span> pip._internal.utils.misc <span class="keyword">import</span> get_installed_distributions</span><br><span class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> call</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">import</span> getopt, sys</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">usage</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"""</span></span><br><span class="line"><span class="string">linotp-pip-update</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    -f, --force    force the update</span></span><br><span class="line"><span class="string">    -h, --help     show this help</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> dist <span class="keyword">in</span> pip.get_installed_distributions():</span><br><span class="line">        call(<span class="string">"pip install --upgrade "</span> + dist.project_name, shell=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p>還是不行，依舊報相同的錯。<br>回頭細看發現改錯了一個地方，既然已經導入了get_installed_distributions這個方法，那麼就不應該<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> dist <span class="keyword">in</span> pip.get_installed_distributions():</span><br></pre></td></tr></table></figure></p>
+<p>這麼寫，最開始就是這裡報錯，pip中找不到get_installed_distributions()，<br>所以該處改為如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> dist <span class="keyword">in</span> get_installed_distributions():</span><br></pre></td></tr></table></figure></p>
+<p>成功。<br>備註1：突然看到有人說為防止高版本的庫不支持linotp，一定不要運行這個。。因此在這個命令執行過程中我又取消了，希望為時不晚。<br>備註2：為了方便應該把配置文件拷貝到/etc/linotp2/,也可以使用/opt/LINOTP/etc/linotp2或是/usr/etc/linotp2根據系統不一樣會有所區別。當前系統CentOS 7.4 在/usr/ect/linotp2下<br>所以接下來拷貝配置文件到/etc目錄下<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost linotp2]# cp -rf /usr/etc/linotp2/ /etc/linotp2</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>設置令牌數據庫</strong><br>繼續官網上的教程，<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p mysql</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在執行這一步之前因為先前在另一個系統中也安裝過mysql,記得mysql第一次登陸時有一個默認的隨機密碼可以在某個文件中找到，因此又憑借這個”經驗”找了一下那個文件。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# grep 'temporary password' /var/log/mysqld.log</span><br><span class="line">grep: /var/log/mysqld.log: No such file or directory</span><br></pre></td></tr></table></figure></p>
+<p>結果提示找不到這個文件，有可能密碼為空，直接登陸試試。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mysql -u root -p mysql</span><br><span class="line">Enter password: </span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line"></span><br><span class="line">Welcome to the MariaDB monitor.  Commands end with ; or \g.</span><br><span class="line">Your MariaDB connection id is 3</span><br><span class="line">Server version: 5.5.56-MariaDB MariaDB Server</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.</span><br><span class="line"></span><br><span class="line">Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</span><br></pre></td></tr></table></figure></p>
+<p>登陸成功，雖然mariadb可以替代mysql,但為了減少後續不必要的麻煩，還是決定用mysql和官網保持一致。<br>下載rpm包：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost rpm-file]# wget http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm</span><br></pre></td></tr></table></figure></p>
+<p>安裝：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost rpm-file]# rpm -ivh mysql-community-release-el7-5.noarch.rpm </span><br><span class="line">[root@localhost rpm-file]# yum install mysql-community-server</span><br></pre></td></tr></table></figure></p>
+<p>等了好久，終於安裝完了。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mysql -u root -p mysql</span><br><span class="line">Enter password: </span><br><span class="line">ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)</span><br></pre></td></tr></table></figure></p>
+<p>報錯，重啟mysql服務，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# service mysqld restart</span><br><span class="line">Redirecting to /bin/systemctl restart mysqld.service</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mysql -u root -p mysql</span><br><span class="line">Enter password: </span><br><span class="line">Reading table information for completion of table and column names</span><br><span class="line">You can turn off this feature to get a quicker startup with -A</span><br><span class="line"></span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 2</span><br><span class="line">Server version: 5.6.40 MySQL Community Server (GPL)</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span></span><br></pre></td></tr></table></figure>
+<p>沒有密碼，登陸成功。<br>設置密碼：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> set password for 'root'@'%'=password('123456');</span><br><span class="line">ERROR 1558 (HY000): Column count of mysql.user is wrong. Expected 43, found 42. Created with MySQL 50556, now running 50640. Please use mysql_upgrade to fix this error.</span><br></pre></td></tr></table></figure></p>
+<p>原因是由於升級過數據庫，升完后沒有升級數據結構造成，解決辦法：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mysql_upgrade -u root -p</span><br></pre></td></tr></table></figure></p>
+<p>然後設置root密碼：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> set password for 'root'@'localhost' =password('123456');</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>不需要重啟數據庫，即可生效。<br>繼續看官網。 創建數據庫L2demo，用來保存Token。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> create database L2demo;</span><br><span class="line">Query OK, 1 row affected (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>然後更改用戶對某些庫的遠程權限，語法格式為：grant all privileges on 库名.表名 to ‘用户名‘@’IP地址’ identified by ‘密码’ with grant option;<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> grant all privileges on L2demo.* to 'linotp'@'localhost' identified by 'mySecret'  WITH GRANT OPTION;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"><span class="meta">mysql&gt;</span> flush privileges;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br></pre></td></tr></table></figure></p>
+<p><strong>修改linotp的啟動配置文件</strong><br>linotp里有個默認的配置/etc/linotp2/linotp.ini.example，需要把這個默認配置拷貝一下，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost linotp2]# cp /etc/linotp2/linotp.ini.example /etc/linotp2/linotp.ini</span><br></pre></td></tr></table></figure></p>
+<p>在linotp.ini 中找到sqlalchemy.url ,并修改為：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlalchemy.url = mysql://linotp:mySecret@localhost/L2demo</span><br></pre></td></tr></table></figure></p>
+<p>生成一個加密秘鑰：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost linotp2]# dd if=/dev/urandom of=/etc/linotp2/encKey bs=1 count=96</span><br><span class="line">96+0 records in</span><br><span class="line">96+0 records out</span><br><span class="line">96 bytes (96 B) copied, 0.000186089 s, 516 kB/s</span><br></pre></td></tr></table></figure></p>
+<p>創建linotp日誌目錄：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost linotp2]# mkdir /var/log/linotp</span><br></pre></td></tr></table></figure></p>
+<p>然後可以正式創建數據庫表單。<br>在創建之前先用Navicat遠程連接一下數據庫，發現無法遠程連接。<br>設置L2demo允許遠程連接：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> grant all privileges on L2demo.* to 'linotp'@'%' identified by 'mySecret'  WITH GRANT OPTION; Query OK, 0 rows affected (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>先前的設置‘linotp‘@’localhost’只允許本機鏈接，改為‘linotp‘@’%’對ip不做限制。後面要帶WITH GRANT OPTION,否則就算能連鏈接也會提示一個”select command denied to user…”的錯誤信息。<br>發現裡面沒有任何表。再來創建：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# paster setup-app /etc/linotp2/linotp.ini</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">  .</span><br><span class="line">  File "/usr/lib/python2.7/site-packages/pysodium/__init__.py", line 35, in &lt;module&gt;</span><br><span class="line">    raise ValueError('Unable to find libsodium')</span><br><span class="line">ValueError: Unable to find libsodium</span><br></pre></td></tr></table></figure></p>
+<p>提示找不到”libsodium”,嘗試用yum安裝：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install libsodium</span><br></pre></td></tr></table></figure></p>
+<p>安裝成功，再次執行創建表的命令，提示<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: No module named MySQLdb</span><br></pre></td></tr></table></figure></p>
+<p>嘗試安裝：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install MySQL-python</span><br></pre></td></tr></table></figure></p>
+<p>安裝成功，再次執行paster<br>雖然沒報錯，但有一大堆warn信息，看到關鍵字”SAWarning: Unicode type r”猜測是數據庫編碼的問題，然後設置數據庫編碼:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vi /etc/my.cnf</span><br></pre></td></tr></table></figure></p>
+<p>在最後面加上：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[mysql]</span><br><span class="line">default-character-set =utf8</span><br></pre></td></tr></table></figure></p>
+<p>再次執行paster setup-app.,依舊會有警告信息，細看之後發現意思是，一個方法的參數類型為unicode，但卻傳進來一個不是unicode編碼的參數，問題貌似不大，暫時擱置。然後登陸L2demo數據庫（用戶名:linotp,密碼：mySecret)看看是否有表創建。<br><strong>并沒有。</strong><br>官網上說需要檢查一下以下文件的所有權：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/linotp2/encKey(只讀即可）</span><br><span class="line">/etc/linot2/token.db (如果用到了的話)</span><br><span class="line">/var/log/linotp and /var/log/linotp/linotp.log</span><br></pre></td></tr></table></figure></p>
+<p>暫時未做檢查。<br>官網上有個檢測LinOTP 是否正確安裝的方案：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paster serve /etc/linotp2/linotp.ini</span><br></pre></td></tr></table></figure></p>
+<p>paster 是pylons下的一個命令。Pylons是一个开放源代码的Web应用框架。<br>如果安裝成功，輸入http://<yourserverip>:5001/ 能看到WEBUI的界面。出現如下界面:  </yourserverip></p>
+<p><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_142100.png" alt="">  </p>
+<p>目測應該是成功了。</p>
+<h1 id="在Apache-webserver上把linotp跑起來"><a href="#在Apache-webserver上把linotp跑起來" class="headerlink" title="在Apache webserver上把linotp跑起來"></a><strong>在Apache webserver上把linotp跑起來</strong></h1><p>用如下命令創建一個文件：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# htdigest /etc/linotp2/admins "LinOTP2 admin area" admin</span><br><span class="line">bash: htdigest: command not found...</span><br></pre></td></tr></table></figure></p>
+<p>tip:htdigest命令是Apache的Web服务器内置工具，用于创建和更新储存用户名、域和用于摘要认证的密码文件。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd</span><br></pre></td></tr></table></figure></p>
+<p>提示無法下載mailcap.noarch這個rpm包，公司網絡把這個屏蔽了，添加公司內部的yum源，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost yum.repos.d]# vi /etc/yum.repos.d/CentOS7-Base-163.repo</span><br></pre></td></tr></table></figure></p>
+<p>在最後加上：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[base]</span><br><span class="line">name=CentOS-$releasever - Base</span><br><span class="line">baseurl=http://mirror.ipebg.efoxconn.com/linux/CentOS-7-x86_64-DVD-1708/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</span><br></pre></td></tr></table></figure></p>
+<p>然後可以成功安裝httpd，繼續執行htdigest那個命令。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# htdigest /etc/linotp2/admins "LinOTP2 admin area" admin</span><br><span class="line">Could not open passwd file /etc/linotp2/admins for reading.</span><br><span class="line">Use -c option to create new one.</span><br></pre></td></tr></table></figure></p>
+<p>先手動創建一個空文件：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch /etc/linotp2/admins</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# htdigest /etc/linotp2/admins "LinOTP2 admin area" admin</span><br><span class="line">Adding user admin in realm LinOTP2 admin area</span><br><span class="line">New password:</span><br></pre></td></tr></table></figure>
+<p>密碼設置為：admin<br>安裝并激活以下模塊：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install mod_wsgi</span><br><span class="line">yum install mod_ssl</span><br></pre></td></tr></table></figure></p>
+<p>還需要創建一個文件夾，否則WSGI不能啟動:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# mkdir /var/run/wsgi</span><br></pre></td></tr></table></figure></p>
+<p>接下來配置Apache服務器，配置示例可參考它的官網：<br><a href="https://httpd.apache.org/docs/2.4/upgrading.html" target="_blank" rel="noopener">https://httpd.apache.org/docs/2.4/upgrading.html</a><br>接下來創建一個認證文件：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# touch /etc/httpd/linotp-auth.conf</span><br></pre></td></tr></table></figure></p>
+<p>並且在文件中添加如下內容：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AuthType Digest</span><br><span class="line">AuthName "LinOTP2 admin area"</span><br><span class="line">AuthDigestProvider file</span><br><span class="line">AuthUserFile /etc/linotp2/admins</span><br><span class="line">Require valid-user</span><br></pre></td></tr></table></figure></p>
+<p>配置文件無論是直接放httpd.conf還是其他地方，都需要包含以下內容：（注意裡面的路徑名）<br>準備直接添加到httpd.conf最後，（原本不存在這個文件，手動創建一個）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">Listen 443</span><br><span class="line">WSGIPythonHome /opt/LINOTP</span><br><span class="line">WSGISocketPrefix /var/run/wsgi</span><br><span class="line">&lt;VirtualHost _default_:443&gt;</span><br><span class="line">   ServerAdmin webmaster@localhost</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   &lt;Directory /&gt;</span><br><span class="line">      Options FollowSymLinks</span><br><span class="line">      AllowOverride None</span><br><span class="line">   &lt;/Directory&gt;</span><br><span class="line">   &lt;Directory /var/www/&gt;</span><br><span class="line">      Options Indexes FollowSymLinks MultiViews</span><br><span class="line">      AllowOverride None</span><br><span class="line">      Order allow,deny</span><br><span class="line">      allow from all</span><br><span class="line">   &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">   WSGIScriptAlias /       /etc/linotp2/linotpapp.wsgi</span><br><span class="line"><span class="meta">   #</span></span><br><span class="line"><span class="meta">   #</span> The daemon is running as user 'linotp'</span><br><span class="line"><span class="meta">   #</span> This user should have access to the encKey database encryption file</span><br><span class="line">   WSGIDaemonProcess linotp processes=1 threads=15 display-name=%&#123;GROUP&#125; user=linotp</span><br><span class="line">   WSGIProcessGroup linotp</span><br><span class="line">   WSGIPassAuthorization On</span><br><span class="line"></span><br><span class="line">   &lt;Location /admin&gt;</span><br><span class="line">      Include /etc/httpd/linotp-auth.conf</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line">   &lt;Location /audit&gt;</span><br><span class="line">      Include /etc/httpd/linotp-auth.conf</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line">   &lt;Location /gettoken&gt;</span><br><span class="line">      AuthType Digest</span><br><span class="line">      AuthName "LinOTP2 gettoken"</span><br><span class="line">      AuthDigestProvider file</span><br><span class="line">      AuthUserFile /etc/linotp2/gettoken-api</span><br><span class="line">      Require valid-user</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line">   &lt;Location /manage&gt;</span><br><span class="line">             Include /etc/httpd/linotp-auth.conf</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line">   &lt;Location /selfservice&gt;</span><br><span class="line">      # The authentication for selfservice is done from within the application</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line">   &lt;Location /system&gt;</span><br><span class="line">     Include /etc/httpd/linotp-auth.conf</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line">   &lt;Location /license&gt;</span><br><span class="line">     Include /etc/httpd/linotp-auth.conf</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line">   &lt;Location /validate&gt;</span><br><span class="line">      # No Authentication</span><br><span class="line">   &lt;/Location&gt;</span><br><span class="line"></span><br><span class="line">   ErrorLog /var/log/httpd/error.log</span><br><span class="line">   LogLevel warn</span><br><span class="line"></span><br><span class="line"><span class="meta">   #</span> Do not use %q! This will reveal all parameters, including setting PINs and Keys!</span><br><span class="line"><span class="meta">   #</span> Using SSL_CLIENT_S_DN_CN will show you, which administrator did what task</span><br><span class="line">   LogFormat "%h %l %u %t %&gt;s \"%m %U %H\"  %b \"%&#123;Referer&#125;i\" \"%&#123;User-agent&#125;i\" " LinOTP2</span><br><span class="line">   CustomLog /var/log/httpd/ssl_access.log LinOTP2</span><br><span class="line"></span><br><span class="line"><span class="meta">   #</span>   SSL Engine Switch:</span><br><span class="line"><span class="meta">   #</span>   Enable/Disable SSL for this virtual host.</span><br><span class="line">   SSLEngine on</span><br><span class="line"></span><br><span class="line"><span class="meta">   #</span>   If both key and certificate are stored in the same file, only the</span><br><span class="line"><span class="meta">   #</span>   SSLCertificateFile directive is needed.</span><br><span class="line">   SSLCertificateFile    /etc/ssl/certs/linotpserver.pem</span><br><span class="line">   SSLCertificateKeyFile /etc/ssl/private/linotpserver.key</span><br><span class="line">   &lt;FilesMatch "\.(cgi|shtml|phtml|php)$"&gt;</span><br><span class="line">      SSLOptions +StdEnvVars</span><br><span class="line">   &lt;/FilesMatch&gt;</span><br><span class="line">   &lt;Directory /usr/lib/cgi-bin&gt;</span><br><span class="line">      SSLOptions +StdEnvVars</span><br><span class="line">   &lt;/Directory&gt;</span><br><span class="line">   BrowserMatch ".*MSIE.*" \</span><br><span class="line">     nokeepalive ssl-unclean-shutdown \</span><br><span class="line">     downgrade-1.0 force-response-1.0</span><br><span class="line"></span><br><span class="line">   ErrorDocument 500"&lt;h1&gt;Internal Server Error&lt;/h1&gt; Possible reasons can be missing modules or bad access rights  on LinOTP configuration files or log files. Please check the apache logfile ```Shell/var/log/httpd/error_log``` for more details."</span><br><span class="line"></span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure></p>
+<p>注意：CentOS中mod_ssl模塊的配置文件/etc/httpd/conf.d/ssl.conf 中已經定義了一個VirtualHost，需要避免衝突。為方便起見直接重命名為conf.d.old<br>注意：如果linotpserver.pem等秘鑰證書不存在，則需要手動創建一些，參考<a href="http://www.linotp.org/doc/latest/part-installation/server-installation/pip_install.html#creating-ssl-certs" target="_blank" rel="noopener">http://www.linotp.org/doc/latest/part-installation/server-installation/pip_install.html#creating-ssl-certs</a><br>這裡先不創建。<br>WSGI有一個叫linotp的守護進程，所以需要一個系統賬戶，或者新建它：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost httpd]# useradd -r linotp -d /opt/LINOTP/</span><br></pre></td></tr></table></figure></p>
+<p>useradd 是linux用來添加新用戶的命令。<br>-r表示建立系統賬號，－d：指定用户登入时的启始目录<br> 把/etc/linotpapp.wsgi文件 複製到/etc/linotp2下。先前已經把/opt/LINOTP/etc/linopt2下的文件全部複製到/etc/linotp2下了，所以這一步未做操作。  </p>
+<p>檢查下列文件的權限：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-- /etc/linotp2/linotp.ini linotp應該擁有讀取權限</span><br><span class="line">-- /etc/linotp2/enckey linotp應該擁有讀取權限</span><br><span class="line">-- /etc/linotp2/data  這是一個臨時文件夾，```linotp```應該擁有寫的權限</span><br><span class="line">-- /var/log/linotp/ linotp應該擁有寫的權限</span><br></pre></td></tr></table></figure></p>
+<p>如果權限不當，可以使用如下命令來解決:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">linotp-fix-access-rights -f /etc/linotp2/linotp.ini -u linotp</span><br></pre></td></tr></table></figure></p>
+<p>這裡直接用上述命令修復一下再說。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost etc]# linotp-fix-access-rights -f /etc/linotp2/linotp.ini -u linotp</span><br><span class="line">adduser: user 'linotp' already exists</span><br><span class="line">Created user linotp</span><br><span class="line">Fixed access rights for /etc/linotp2/data</span><br><span class="line">Fixed access rights for /etc/linotp2/encKey</span><br><span class="line">Fixed access rights for /etc/linotp2/who.ini</span><br><span class="line">Fixed access rights for /etc/linotp2/linotp.ini</span><br><span class="line">Fixed access rights for /var/log/linotp</span><br></pre></td></tr></table></figure></p>
+<p>重啟Apache和mysql；<br>重啟Apache時報錯，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]# apachectl restart</span><br><span class="line">Job for httpd.service failed because the control process exited with error code. See "systemctl status httpd.service" and "journalctl -xe" for details.</span><br></pre></td></tr></table></figure></p>
+<p>網上說可能是因為端口衝突，同時發現/etc/httpd/conf 下也有一個httpd.conf 文件，所以剛剛建錯了。現在先把/etc/httpd/httpd.conf里的文件內容添加到/etc/httpd/conf/httpd.conf文件最後。並且刪除/etc/httpd/httpd.conf<br>輸入systemctl status httpd.service發現一行，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpd: Syntax error on line 353 of /etc/httpd/conf/httpd.conf: Could not open config directory /etc/httpd/conf.d: No such file or directory</span><br></pre></td></tr></table></figure></p>
+<p>剛剛操作錯了一步，把/etc/httpd/conf.d 給重命名了，現在恢復：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mv /etc/httpd/conf.d.old /etc/httpd/conf.d</span><br><span class="line">mv /etc/httpd/conf.d/ssl.conf /etc/httpd/conf.d/ssl.conf.old</span><br></pre></td></tr></table></figure></p>
+<p>再次重啟：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf.d]# apachectl restart</span><br><span class="line">Job for httpd.service failed because the control process exited with error code. See "systemctl status httpd.service" and "journalctl -xe" for details.</span><br><span class="line">[root@localhost conf.d]# systemctl status httpd.service</span><br><span class="line">● httpd.service - The Apache HTTP Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/httpd.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: failed (Result: exit-code) since Sat 2018-07-07 01:01:37 CST; 19s ago</span><br><span class="line">     Docs: man:httpd(8)</span><br><span class="line">           man:apachectl(8)</span><br><span class="line">  Process: 9280 ExecStop=/bin/kill -WINCH $&#123;MAINPID&#125; (code=exited, status=1/FAILURE)</span><br><span class="line">  Process: 9279 ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND (code=exited, status=1/FAILURE)</span><br><span class="line"> Main PID: 9279 (code=exited, status=1/FAILURE)</span><br><span class="line"></span><br><span class="line">Jul 07 01:01:37 localhost.localdomain systemd[1]: Starting The Apache HTTP Server...</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain httpd[9279]: AH00526: Syntax error on line 432 of /etc/httpd/conf/httpd.conf:</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain httpd[9279]: SSLCertificateFile: file '/etc/ssl/certs/linotpserver.pem' does not exist or is empty</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain systemd[1]: httpd.service: main process exited, code=exited, status=1/FAILURE</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain kill[9280]: kill: cannot find process ""</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain systemd[1]: httpd.service: control process exited, code=exited status=1</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain systemd[1]: Failed to start The Apache HTTP Server.</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain systemd[1]: Unit httpd.service entered failed state.</span><br><span class="line">Jul 07 01:01:37 localhost.localdomain systemd[1]: httpd.service failed.</span><br></pre></td></tr></table></figure></p>
+<p>創建linotpserver.pem，<br>首先參考<a href="https://serversforhackers.com/c/self-signed-ssl-certificates" target="_blank" rel="noopener">https://serversforhackers.com/c/self-signed-ssl-certificates</a>生成一個linotpserver.key 文件<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out "/etc/ssl/private/linotpserver.key" 2048</span><br></pre></td></tr></table></figure></p>
+<p>由於現在可能不存在一些文件夾，所以執行這兩步的時候可能會報些錯，創建相應的文件夾再操作文件就好。<br>接下來執行官網上創建自簽名證書的方法：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -x509 -key /etc/ssl/private/linotpserver.key    -out /etc/ssl/certs/linotpserver.pem -days 365</span><br></pre></td></tr></table></figure></p>
+<p>然後重啟Apache，成功。<br>再重啟mysql，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysqld restart</span><br></pre></td></tr></table></figure></p>
+<p>再啟動linotp服務器：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paster serve /etc/linotp2/linotp.ini</span><br></pre></td></tr></table></figure></p>
+<p>在windows上遠程訪問，輸入”10.195.11.78:5001/manage”瀏覽器會彈出一個錯誤，（現在使用的是chorme，根據測試firefox也會報錯，但彈出框里的內容不一樣,但歸根結底的原因應該是一樣的，我們繼續用谷歌測試）。  </p>
+<p>按F12，打開調試模式，發現會向後台發送兩個請求：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://10.195.11.78:5001/i18n/zh.json</span><br><span class="line">http://10.195.11.78:5001/system/getConfig</span><br></pre></td></tr></table></figure></p>
+<p>第一個請求應該是為了支持國際化獲取語言的配置文件，第二個請求來獲取系統配置。<br>因為linotp啟動運行有日誌文件，因此決定去查看日誌文件。<br>首先在linotp.ini啟動配置文件中設置log輸出級別<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/linotp2/linotp.ini</span><br></pre></td></tr></table></figure></p>
+<p>更改的位置有：176行，215行，227行，都設置為debug級別，並且54行開啟調試模式，debug = true<br>補充：<br>  使用vi編輯器時顯示行號的方法：vi ~/.vimrc ,裡面的內容是”set nu”<br>然後關停服務，清空以前的linotp日誌，重新啟動,日誌內容如下:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">2018/07/07 - 17:09:12 WARNI [linotp.useridresolver.SCIMIdResolver][&lt;module&gt; #45] Missing modules for SCIMResolver: 'No module named osiam'</span><br><span class="line">2018/07/07 - 17:09:12 WARNI [linotp.useridresolver][reload_classes #118] unable to load resolver module : 'SCIMIdResolver' (ImportError('No module named osiam',))</span><br><span class="line">2018/07/07 - 17:09:12 ERROR [linotp.provider][load_provider_classes #76] unable to load provider module : linotp.provider (ImportError('No module named SMSProvider',))</span><br><span class="line">2018/07/07 - 17:09:12 WARNI [linotp.tokens][load_module #113] unable to load token module : 'linotp.tokens.smstoken' (Exception(ImportError('No module named SMSProvider',),))</span><br><span class="line">2018/07/07 - 17:09:12 ERROR [linotp.provider][load_provider_classes #76] unable to load provider module : linotp.provider (ImportError('No module named SMSProvider',))</span><br><span class="line">2018/07/07 - 17:09:12 WARNI [linotp.tokens][load_module #113] unable to load token module : 'linotp.tokens.emailtoken' (Exception(ImportError('No module named SMSProvider',),))</span><br><span class="line">2018/07/07 - 17:09:12 ERROR [linotp.provider][load_provider_classes #76] unable to load provider module : linotp.provider (ImportError('No module named SMSProvider',))</span><br><span class="line">2018/07/07 - 17:09:12 WARNI [linotp.tokens][load_module #113] unable to load token module : 'linotp.tokens.pushtoken.pushtoken' (Exception(ImportError('No module named SMSProvider',),))</span><br><span class="line">2018/07/07 - 17:09:12 ERROR [linotp.provider][load_provider_classes #76] unable to load provider module : linotp.provider (ImportError('No module named SMSProvider',))</span><br><span class="line">2018/07/07 - 17:09:12 WARNI [linotp.tokens][load_module #113] unable to load token module : 'linotp.tokens.voicetoken.voicetoken' (Exception(ImportError('No module named SMSProvider',),))</span><br><span class="line">2018/07/07 - 17:09:12 ERROR [linotp.lib.audit.base][getAuditClass #52] No suitable Audit Class found. Working with dummy AuditBase class. Probably you didn't configure 'linotpAudit' in the linotp.ini file.</span><br></pre></td></tr></table></figure></p>
+<p>主要有兩個錯誤，第一是找不到SMSProvider,短信令牌相關的服務，可能是先前安裝失敗。第二是找不到審計類，提示說可能未在啟動文件中作配置。<br>先看看能否解決第二個問題。<br>查看linotp.ini 文件，66行，67行是被注釋掉的，然後在67行下面添加兩行：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">linotpAudit.type = linotp.lib.audit.SQLAudit</span><br><span class="line">linotpAudit.sql.url = mysql://linotp:mySecret@localhost/L2demo</span><br></pre></td></tr></table></figure></p>
+<p>linotpAudit.type指定的是審計的類，下面那個是審計日誌存放位置。<br>突然想起來還未去查看是否成功創建Token的表單。  </p>
+<p><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-07_092218.png" alt="">  </p>
+<p>成功創建了13個表，看來要在啟動時才會創建這些表。<br>接著上面的操作，修改完linotp.ini后，再次清空日誌（因為是debug級別，所以輸出內容較多，清空后查看方便），重啟。<br>查看日誌，提示找不到”etc/linotp2/private.pem”和”/etc/linotp2/public.pem”這兩個文件。<br>準備再去官網上看看自簽名證書相關內容。有關自簽名數字證書參考<a href="https://www.cnblogs.com/lihuang/articles/4205540.html" target="_blank" rel="noopener">https://www.cnblogs.com/lihuang/articles/4205540.html</a>  </p>
+<p>有關SSL 之公钥和私钥參考<a href="https://blog.csdn.net/shen_guo/article/details/49928525" target="_blank" rel="noopener">https://blog.csdn.net/shen_guo/article/details/49928525</a><br>執行下面兩步，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#</span>生成公鑰</span><br><span class="line">openssl rsa -in /etc/ssl/private/linotpserver.key -pubout -out /etc/linotp2/public.pem</span><br><span class="line"><span class="meta">#</span>先前生成的linotpserver.key就是私鑰</span><br><span class="line">cp  /etc/ssl/private/linotpserver.key  /etc/linotp2/private.pem</span><br><span class="line"><span class="meta">#</span></span><br><span class="line">cp  /etc/ssl/certs/linotpserver.pem  /etc/linotp2/public.pem</span><br></pre></td></tr></table></figure></p>
+<p>重啟成功，現在還剩一個<strong>SMSProvider</strong>的問題,待定<br>時間過去了大概3小時…<br>找到了解決辦法，坑爹的linotp，在/lib/python2.7/site-packages/linotp/provider 中找不到SMSProvider.py,然後做如下操作：<br>因為用pip安裝過了SMSProvider ,所以：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cp /usr/lib/python2.7/site-packages/smsprovider/SMSProvider.py /lib/python2.7/site-packages/linotp/</span><br><span class="line">[root@localhost smsprovider]# cp /usr/lib/python2.7/site-packages/smsprovider/SMSProvider.pyc /lib/python2.7/site-packages/linotp/provider/smsprovider/SMSProvider.pyc</span><br></pre></td></tr></table></figure></p>
+<p>時間過去太久了，有時候解決完一個錯誤之後甚至不知道上一步做的什麼，接下來做什麼。<br>現在重啟linotp服務只剩一個警告：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WARNI [linotp.useridresolver.SCIMIdResolver][&lt;module&gt; #45] Missing modules for SCIMResolver: 'No module named osiam'</span><br><span class="line"> WARNI [linotp.useridresolver][reload_classes #118] unable to load resolver module : 'SCIMIdResolver' (ImportError('No module named osiam',))</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://github.com/osiam/osiam" target="_blank" rel="noopener">OSIAM - Open Source Identity and Access Management </a><br>解決辦法：<br>上github上下載它的源代碼：<a href="https://github.com/osiam/connector4python" target="_blank" rel="noopener">osiam/connector4python</a><br>下載zip文件，然後然後解壓，然後把解壓目錄的python重命名為osiam，放到opt/python_modules/osiam下，接下來：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd osiam</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure></p>
+<p>中間可能需要升級一下setuptools ,”pip install –upgrade setuptools”<br>至此，所有啟動時的異常信息都已解決。<br>刷新頁面，終於出現了下面的頁面：<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-07_163621.png" alt=""><br>控制台還有一個中文json文件請求失敗的錯誤，請求地址是<a href="http://10.195.11.78:5001/i18n/zh.json" target="_blank" rel="noopener">http://10.195.11.78:5001/i18n/zh.json</a><br><a href="http://10.195.11.78:5001" target="_blank" rel="noopener">http://10.195.11.78:5001</a> 對應的是usr/lib/python2.7/site-packages/linotp/public 這個目錄，去查看確實沒有對應的i18n/zh.json文件。<br>去github上下載linotp的源碼文件，下載地址是<a href="https://github.com/LinOTP/LinOTP" target="_blank" rel="noopener">https://github.com/LinOTP/LinOTP</a>查看其編譯過程.<br>解壓后在LinOTP-master\linotpd\src下有個MakeFile文件，打開，在76行，就是生成json文件的，因此我們在public目錄下新建i18n文件夾，手動生成zh.json文件，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install pojson</span><br><span class="line">pojson -e utf-8 /usr/lib/python2.7/site-packages/linotp/i18n/zh/LC_MESSAGES/linotp.po &gt; /usr/lib/python2.7/site-packages/linotp/public/i18n/zh.json</span><br></pre></td></tr></table></figure></p>
+<h1 id="創建用戶"><a href="#創建用戶" class="headerlink" title="創建用戶"></a><strong>創建用戶</strong></h1><pre><code>LinOTP 配置（LinOTP config）——&gt;用戶ID解析器(UserIdResovers)——&gt;新建
+</code></pre><p>這裡支持三種方式來解析外部用戶信息。這裡記錄其中的SQL的形式。</p>
+<p>—<strong>SQL</strong><br>經過測試，若選擇oracle 數據庫，在測試鏈接時，會報一個錯誤：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL 配置包含错误: DatabaseError('(cx_Oracle.DatabaseError) DPI-1047: 64-bit Oracle Client library cannot be loaded: "libclntsh.so: cannot open shared object file: No such file or directory"</span><br></pre></td></tr></table></figure></p>
+<p>导致这个问题的原因是本机的Python2.7是64位的，而数据库用了32位的instantclient-basic，所以要把instantclient-basic的版本更新为64位的，由於無法更改數據庫配置，則改為鏈接mysql數據庫。</p>
+<p>同樣需要創建表，插入一條數據。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-- Create table</span><br><span class="line">CREATE TABLE `linotp_user` (</span><br><span class="line">  `id` varchar(255) NOT NULL,</span><br><span class="line">  `user` varchar(2000) NOT NULL,</span><br><span class="line">  `telephoneNumber` varchar(2000) DEFAULT NULL,</span><br><span class="line">  `mobile` varchar(2000) DEFAULT NULL,</span><br><span class="line">  `mail` varchar(2000) DEFAULT NULL,</span><br><span class="line">  `sn` varchar(2000) DEFAULT NULL,</span><br><span class="line">  `givenName` varchar(2000) DEFAULT NULL,</span><br><span class="line">  `password` varchar(2000) DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br></pre></td></tr></table></figure></p>
+<p>創建一個表 linotp_user,添加一條數據 其中id 和user 是必填項。<br>tip:若選擇oracle時需要安裝cx_oracle模塊，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install cx_Oracle</span><br></pre></td></tr></table></figure></p>
+<p>測試鏈接，若出現以下界面則表示鏈接成功！<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_104659.png" alt="">  </p>
+<p>在創建完第一個用戶ID解析器之後，頁面將自動提示要求創建一個realm，翻譯為域，這裡可以理解為用組。點擊”OK”進入創建域的界面。<br>然後點擊NEW，這裡設置域的名稱為realm1,並且綁定一個用戶ID解析器。<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_104809.png" alt="">  </p>
+<p>回到首頁，點擊查看用戶即可看到剛剛添加的數據。<br>需要注意的是，在添加用戶信息時，數據庫里密碼字段應該存儲為加密后的值，否則就算這裡添加了密碼，最後也無法成功登陸linotp。解決辦法是：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">linotp-create-pwidresolver-user -u [username] -i [userid] -p [password] -d [description]&gt;&gt; passwd-file</span><br></pre></td></tr></table></figure></p>
+<p>把用戶信息寫入passwd-file 文件，我們執行：<br>linotp-create-pwidresolver-user -u ‘user1’ -i 1001 -p ‘test’ &gt;&gt; /otp/passwd-file<br>然後查看passwd-file文件，裡面的內容是：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 user1:$6$eQwqCewKXwjN5TeC$nGXNtH1myPMYhSZRZaeJQwBF4sNTQo7AAd0nPlz3J0HGpkZRU5yusfLEld0kJALU3MJmCiabJAixPUBSdwOnb1:1001:1001:,,,,::</span><br></pre></td></tr></table></figure></p>
+<p>然後複製那一段看不懂的<br>“$6$eQwqCewKXwjN5TeC$nGXNtH1myPMYhSZRZaeJQwBF4sNTQo7AAd0nPlz3J0HGpkZRU5yusfLEld0kJALU3MJmCiabJAixPUBSdwOnb1”<br>到數據庫的password字段中。  </p>
+<h1 id="創建令牌"><a href="#創建令牌" class="headerlink" title="創建令牌"></a><strong>創建令牌</strong></h1><p>點擊查看令牌，然後左側有一個<strong><em>註冊</em></strong> 按鈕，點擊，選擇令牌類型，這裡選擇<strong><em>HMAC 基於時間</em></strong>，時間步長選擇60秒，其餘為默認。點擊註冊。</p>
+<p>網站提示一個錯誤，”No module named pil”,<br>然後 pip install Pillow 去安裝Pillow ,甚至還用了網上的一系列方案安裝了pyhton image等，可還是報這個錯,追代碼：<br>報錯處為：  from qrcode.image.pil import PilImage<br>PilImage明明已經存在，進入PilImage類，在上面發現:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">	<span class="keyword">from</span> PIL <span class="keyword">import</span> Image, ImageDraw</span><br><span class="line"><span class="keyword">except</span> ImportError:  <span class="comment"># pragma: no cover</span></span><br><span class="line">	<span class="keyword">import</span> Image</span><br><span class="line">	<span class="keyword">import</span> ImageDraw</span><br></pre></td></tr></table></figure></p>
+<p>然後網上搜索centos 安裝PIL模塊，依舊沒有解決問題<br>然後對比發現，在windows下執行 pip install Pillow 時 在python2.7/site-packages/中會生成 PIL 文件夾，但linux中沒有</p>
+<p>按照這個思路，查看源代碼對比還發現linux中 site-packages/qrcode/image 中還缺少pil.py類，不曉得是否還缺少其他，<br>所以解決辦法是：<br> 複製windows 下 PIL 文件夾及其內容到site-packages/下<br> 複製windows 下 image 文件及其內容到site-packages/qrcode/image中<br>再次按照上述方法創建Token。創建成功后出現如下界面：<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_141926.png" alt=""><br>然後下載一個FreeOTP ,Android 和 ios直接在應用市場里下載即可。下載完后掃描那個二維碼，即可看到隨時間變化的六位數的動態密碼。</p>
+<h1 id="把用戶綁定到令牌"><a href="#把用戶綁定到令牌" class="headerlink" title="把用戶綁定到令牌"></a><strong>把用戶綁定到令牌</strong></h1><p> 點擊查看用戶，鼠標單擊選中一個用戶，左上角<strong><em>所選用戶</em></strong>一欄會出現所選的用戶，然後同理點擊查看令牌選擇一個令牌，再點擊左側<strong><em>分配</em></strong>就可以把這個令牌分配給指定的用戶了。<br>接下來測試是否可以通過linotp來認證這個用戶，LinOTP提供了一個內置的測試接口，格式如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://YOUR_LINOTP_SERVER/validate/check?user=USERNAME&amp;pass=PINOTP</span><br></pre></td></tr></table></figure></p>
+<p>剛剛沒有設置PIN，所以我們的測試url如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.195.11.78:5001/validate/check?user=user1&amp;pass=284493</span><br></pre></td></tr></table></figure></p>
+<p>然後將上面的地址在瀏覽器中打開，若驗證成功會返回如下的一些數據，<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   "version": "LinOTP 2.10.0.1", </span><br><span class="line">   "jsonrpc": "2.0802", </span><br><span class="line">   "result": &#123;</span><br><span class="line">      "status": true, </span><br><span class="line">      "value": true</span><br><span class="line">   &#125;, </span><br><span class="line">   "id": 0</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>vlaue為true表明認證成功。<br>測試成功后，用戶可以登錄linotp。瀏覽器中輸入：<a href="http://10.195.11.78:5001/selfservice/login輸入賬號密碼即可。但是登錄后，裡面一片空白，不能進行任何操作。因為我們還沒有配置用戶的權限。" target="_blank" rel="noopener">http://10.195.11.78:5001/selfservice/login輸入賬號密碼即可。但是登錄后，裡面一片空白，不能進行任何操作。因為我們還沒有配置用戶的權限。</a>  </p>
+<h1 id="用戶策略policy配置"><a href="#用戶策略policy配置" class="headerlink" title="用戶策略policy配置"></a><strong>用戶策略policy配置</strong></h1><p> 這一部分官網介紹地址為：<br><a href="http://www.linotp.org/doc/latest/part-management/policy/index.html" target="_blank" rel="noopener">http://www.linotp.org/doc/latest/part-management/policy/index.html</a><br> 策略和權限相關，linotp可以為管理員和普通用戶設置不同的權限，有兩種類型的權限，第一種是登錄LinOTP自助門戶網站的權限，可以設定哪個用戶組的哪個用戶可以在門戶網站上進行哪些操作。另一種權限是為管理員來管理令牌的，可以設置一個管理員只允許管理某一個用戶組的令牌。<br> 一個policy包含以下值：<br>Active：<br>  是否激活，不用時可設置為inactive，而不是刪除。<br>Policy name：<br>  名字，用來區分標識policy。<br>Scope:<br>  權限的範圍：比如selfservice,admin,system and enrollment等。<br>Action：<br>  定義用戶可以進行哪些操作。<br>User：<br>  用戶名，表明該policy對該用戶有效，多個用戶用逗號分隔。這裡有多種配置方式，詳情參考：<br><a href="http://www.linotp.org/doc/latest/part-management/policy/users-in-policies.html#users-in-policies" target="_blank" rel="noopener">http://www.linotp.org/doc/latest/part-management/policy/users-in-policies.html#users-in-policies</a><br>Realm:<br>  表明這個策略是為哪個用戶組定義的。<br>Client:<br>  客戶端ip，指定的ip才生效。<br>官方有一個推薦的最佳配置：<br><strong>Administrators:</strong><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[policy1]</span><br><span class="line">scope = admin</span><br><span class="line">action = *</span><br><span class="line">user = superadmin</span><br><span class="line">realm = *</span><br><span class="line"></span><br><span class="line">[license1]</span><br><span class="line">scope = license</span><br><span class="line">user = superadmin</span><br><span class="line">action = setlicense</span><br><span class="line"></span><br><span class="line">[policy2]</span><br><span class="line">scope = admin</span><br><span class="line">action = initHMAC, resync, setOTPPIN, userlist, assign, unassign, remove, reset, set, import</span><br><span class="line">user = issuer</span><br><span class="line">realm = *</span><br><span class="line"></span><br><span class="line">[policy3]</span><br><span class="line">scope = admin</span><br><span class="line">action = reset, setOTPPIN, losttoken, resync, enable, disable</span><br><span class="line">user = uhd</span><br><span class="line">realm=*</span><br></pre></td></tr></table></figure></p>
+<p>policy1 是超級管理員，可以進行任何操作，包括管理所有用戶組設置許可證等，”issuer”可以初始化令牌，設置PIN，分配和導入令牌，以及一些大略的令牌管理任務。但不允許註冊處HMAC之外其他的令牌，也不允許在用戶組之間移動令牌。”uhd”只允許重設錯誤次數，設置PIN，以及設置token是否有效。<br><strong>System</strong><br>為了避免policy政策或者系統設置隨意改變，也需要定義一些系統policy：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[syspol1]</span><br><span class="line">scope = system</span><br><span class="line">action = read, write</span><br><span class="line">user = superadmin</span><br></pre></td></tr></table></figure></p>
+<p>只有超級管理員才有系統配置的讀寫權限。<br><strong>selfService</strong><br>這部分權限可以自定義設置，不過考慮到一般用戶可以註冊Google Authenticator，可以如下設置：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[selfpol1]</span><br><span class="line">scope = selfservice</span><br><span class="line">realm = realm1</span><br><span class="line">action = webprovisionGOOGLE, reset, resync, setOTPPIN, disable</span><br><span class="line"></span><br><span class="line">[enroll1]</span><br><span class="line">scope = enrollment</span><br><span class="line">realm = realm1</span><br><span class="line">action = maxtroken = 2</span><br></pre></td></tr></table></figure></p>
+<p>“selfpol1”定義了用戶可以註冊一個Google Authenticator,可以設置PIN，重設錯誤次數，也可以使Token失效（一旦設置失效自己不能讓它重新生效），”enroll1”這個策略限制用戶最多只能使用兩個Token。<br>按照這個制定一個普通用戶的策略后登陸，即可看到如下的界面（會因制定的策略不同而有所不同）：<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/2018-07-09_142900.png" alt="">   </p>
+<p>參考資料：<br><a href="http://dantangfan.github.io/2014/08/07/linotp.html" target="_blank" rel="noopener">http://dantangfan.github.io/2014/08/07/linotp.html</a>  </p>
+<blockquote>
+<p><strong>備註：所有資料來源于網絡，供學習、記錄、交流用。</strong></p>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="HuangFan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LinOTP-python/" rel="tag"># LinOTP,python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/19/ActiveMQ入門實踐/" rel="next" title="activemq的入門實踐">
+                <i class="fa fa-chevron-left"></i> activemq的入門實踐
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/13/About-TCP-TP/" rel="prev" title="About TCP/TP">
+                About TCP/TP <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjgwNy8xMzM0Mw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">HuangFan</p>
+              <p class="site-description motion-element" itemprop="description">Java</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/Tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/man-tou-hao-chi-bu/activities" target="_blank" title="知乎" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安裝"><span class="nav-number">1.</span> <span class="nav-text">安裝</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在Apache-webserver上把linotp跑起來"><span class="nav-number">2.</span> <span class="nav-text">在Apache webserver上把linotp跑起來</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#創建用戶"><span class="nav-number">3.</span> <span class="nav-text">創建用戶</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#創建令牌"><span class="nav-number">4.</span> <span class="nav-text">創建令牌</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#把用戶綁定到令牌"><span class="nav-number">5.</span> <span class="nav-text">把用戶綁定到令牌</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用戶策略policy配置"><span class="nav-number">6.</span> <span class="nav-text">用戶策略policy配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangFan</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>

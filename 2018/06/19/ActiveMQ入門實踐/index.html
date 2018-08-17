@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本篇涉及消息隊列MQ的理解，並且以ActiveMQ為例，記錄ActiveMQ的安裝、消息持久化機制的幾種方法、以及兩種模式下(Queue、Topic)消息與發送接收示例">
+<meta name="keywords" content="java,activemq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="activemq的入門實踐">
+<meta property="og:url" content="http://sukianata.coding.me/2018/06/19/ActiveMQ入門實踐/index.html">
+<meta property="og:site_name" content="清露晨流，新桐初引">
+<meta property="og:description" content="本篇涉及消息隊列MQ的理解，並且以ActiveMQ為例，記錄ActiveMQ的安裝、消息持久化機制的幾種方法、以及兩種模式下(Queue、Topic)消息與發送接收示例">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191119.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191126.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191129.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191134.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191138.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806190146.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/201806190201.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/201806190210.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806230949.gif">
+<meta property="og:updated_time" content="2018-06-23T03:02:12.935Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="activemq的入門實踐">
+<meta name="twitter:description" content="本篇涉及消息隊列MQ的理解，並且以ActiveMQ為例，記錄ActiveMQ的安裝、消息持久化機制的幾種方法、以及兩種模式下(Queue、Topic)消息與發送接收示例">
+<meta name="twitter:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191119.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://sukianata.coding.me/2018/06/19/ActiveMQ入門實踐/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>activemq的入門實踐 | 清露晨流，新桐初引</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">清露晨流，新桐初引</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">boring,boring,boring</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-/tags/"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />Commonweal 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/06/19/ActiveMQ入門實踐/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">activemq的入門實踐
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/06/19 09:55:54" itemprop="dateCreated datePublished" datetime="2018-06-19T09:55:54+08:00">2018/06/19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018/06/23 11:02:12" itemprop="dateModified" datetime="2018-06-23T11:02:12+08:00">2018/06/23</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">本篇涉及消息隊列MQ的理解，並且以ActiveMQ為例，記錄ActiveMQ的安裝、消息持久化機制的幾種方法、以及兩種模式下(Queue、Topic)消息與發送接收示例</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="什麼是消息隊列MQ？"><a href="#什麼是消息隊列MQ？" class="headerlink" title="什麼是消息隊列MQ？"></a>什麼是消息隊列MQ？</h1><ol>
+<li><strong>概述</strong><br>消息隊列中間件是分佈式系統中的重要組件，主要解決應用解耦、異步消息，流量削峰等問題。  </li>
+<li><strong>應用場景</strong>  <ul>
+<li><strong>異步處理</strong><br>場景說明：用戶註冊后，需要發註冊郵件和註冊短信。傳統的做法有兩種：1.串行的方式；2.並行方式<br>a. 串行方式：將註冊信息寫入數據庫成功后，發送註冊郵件，再發送註冊短信，以上三個任務全部完成後，返回給客戶端。<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191119.png" alt=""><br>b. 并行方式：將註冊信息寫入數據庫成功后，發送註冊郵件的同時，發送註冊短信，以上三個任務完成後，返回給客戶端。並行的方式可以提高處理時間。<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191126.png" alt=""><br>引入消息隊列，將不是必須的業務邏輯異步處理，改造后的架構如下:<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191129.png" alt=""><br>按照以上約定，用戶的響應時間相當於是註冊信息寫入數據庫的時間，註冊郵件發送短信寫入消息隊列后直接返回。  </li>
+<li><strong>應用解耦</strong><br>場景說明：用戶下單后，訂單系統需要通知庫存系統。傳統的做法是，訂單系統調用庫存系統的接口，如下圖：<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191134.png" alt=""><br>傳統模式的缺點：假如庫存系統無法訪問，則訂單減庫存失敗，從而導致訂單失敗，兩個系統耦合度高。<br>引入消息隊列后的方案如下：<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806191138.png" alt=""><br>訂單系統： 用戶下單后，訂單系統完成持久化處理，將消息寫入消息隊列，返回用戶訂單下單成功<br>庫存系統：訂閱下單的消息，採用拉/推的方式，獲取下單信息，庫存系統根據下單信息進行庫存操作。  </li>
+<li><strong>流量削峰</strong><br>一般在秒殺或團搶活動中使用廣泛。<br>應用場景：秒殺活動，一般會因為流量過大，導致流量暴增，應用掛掉，為解決這個問題，一般需要在應用前端加入消息隊列。<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806190146.png" alt="">  </li>
+</ul>
+</li>
+</ol>
+<h1 id="activemq的安裝"><a href="#activemq的安裝" class="headerlink" title="activemq的安裝"></a>activemq的安裝</h1><p>安裝很簡單。<br><strong>下載ActiveMQ</strong>  </p>
+<p>  官網下載地址： <a href="http://activemq.apache.org/download.html" target="_blank" rel="noopener">http://activemq.apache.org/download.html</a><br>  此處選擇5.15.4的linux版本。 下載后進入下載目錄：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf apache-activemq-<span class="number">5.15</span>.4</span><br><span class="line">cd apache-activemq-<span class="number">5.15</span>.4</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>bin存放的是腳本文件</li>
+<li>conf存放的是基本配置文件</li>
+<li>data存放的是日誌文件</li>
+<li>docs存放的是說明文檔</li>
+<li>examples存放的是簡單的示例</li>
+<li>lib存放的是activemq所需的jar包</li>
+<li>webapps用於存放項目  </li>
+</ul>
+<p><strong>啟動ActiveMQ</strong><br> 進入bin目錄，輸入./activemq start ,即可啟動<br> <img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/201806190201.png" alt=""><br> ActiveMQ默認啟動時，啟動了內置的jetty服務器，提供了一個用於監控ActiveMQ的應用。<br>打開瀏覽器輸入：<a href="http://localhost:8161/admin,或者遠程訪問時輸入：ip:port/admin，默認賬號密碼是admin/admin,即可看到控制台頁面" target="_blank" rel="noopener">http://localhost:8161/admin,或者遠程訪問時輸入：ip:port/admin，默認賬號密碼是admin/admin,即可看到控制台頁面</a><br> <img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/201806190210.png" alt=""><br>能看到這個頁面，表明啟動成功。<br><strong>備註</strong><br><strong>&gt;&gt;&gt;</strong> 5.15.4版本啟動需要jdk1.8環境<br><strong>&gt;&gt;&gt;</strong> 若啟動失敗可在data目錄下查看activemq.log日誌，查看失敗原因<br><strong>&gt;&gt;&gt;</strong> 若遠程無法訪問，可查看是否開啟8161端口，或直接關閉防火墻。  </p>
+<h1 id="創建一個ActiveMQ工程"><a href="#創建一個ActiveMQ工程" class="headerlink" title="創建一個ActiveMQ工程"></a>創建一個ActiveMQ工程</h1><p>優點偷懶，直接貼代碼，代碼中會有些注釋。 這部分代碼也已經上傳到github中 </p>
+<p><strong>&gt;&gt;&gt;&gt;生產者類</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.sukianata;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.Connection;</span><br><span class="line"><span class="keyword">import</span> javax.jms.ConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> javax.jms.DeliveryMode;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Destination;</span><br><span class="line"><span class="keyword">import</span> javax.jms.JMSException;</span><br><span class="line"><span class="keyword">import</span> javax.jms.MessageProducer;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Session;</span><br><span class="line"><span class="keyword">import</span> javax.jms.TextMessage;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.activemq.ActiveMQConnection;</span><br><span class="line"><span class="keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ClassName: Producter </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 消息生產者類</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sukianata</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/6/19</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producter</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//默認用戶名</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String USERNAME=ActiveMQConnection.DEFAULT_USER;</span><br><span class="line">	<span class="comment">//默認密碼</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PASSWORD=ActiveMQConnection.DEFAULT_PASSWORD;</span><br><span class="line">	<span class="comment">//默認鏈接</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String BROKEN_URL=ActiveMQConnection.DEFAULT_BROKER_URL;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">transient</span> Connection connection;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">transient</span> Session session;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//鏈接工廠</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ConnectionFactory CONNECTION_FACTORY;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">static</span>&#123;</span><br><span class="line">		CONNECTION_FACTORY=<span class="keyword">new</span> ActiveMQConnectionFactory(USERNAME, PASSWORD,BROKEN_URL);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Constructor</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> JMSException </span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Producter</span><span class="params">()</span> <span class="keyword">throws</span> JMSException </span>&#123;</span><br><span class="line">		connection=CONNECTION_FACTORY.createConnection();</span><br><span class="line">		connection.start();</span><br><span class="line">		<span class="comment">/* 創建session會話</span></span><br><span class="line"><span class="comment">		 * 通過參數設置：</span></span><br><span class="line"><span class="comment">		 * 	是否開啟事物</span></span><br><span class="line"><span class="comment">		 *  消息簽收模式(這裡設置為需要消費者需要手動確認消息接收)</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		session=connection.createSession(<span class="keyword">true</span>, Session.CLIENT_ACKNOWLEDGE);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@Description</span>: 通過queue的形式發佈消息</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@author</span> sukianata</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@date</span> 2018/6/19</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendQueueMessage</span><span class="params">(String queueName)</span></span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Destination destination=session.createQueue(queueName);<span class="comment">//消息目的地</span></span><br><span class="line">			<span class="comment">//Queue queue=session.createQueue(queueName);//這種寫法便於區分</span></span><br><span class="line">			MessageProducer messageProducer=session.createProducer(destination);</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">				<span class="keyword">int</span> num=<span class="number">1</span>;</span><br><span class="line">				TextMessage msg=session.createTextMessage(<span class="string">"線程："</span>+Thread.currentThread().getName()+<span class="string">"&gt;&gt;&gt;&gt;productor:10.195.11.158 &gt;&gt;&gt;&gt;&gt;&gt;&gt;正在生產消息，count:"</span>+num);</span><br><span class="line">				System.out.println(<span class="string">"線程："</span>+Thread.currentThread().getName()+<span class="string">"&gt;&gt;&gt;&gt;productor:10.195.11.158 &gt;&gt;&gt;&gt;&gt;&gt;&gt;正在生產第"</span>+(i+<span class="number">1</span>)+<span class="string">"筆消息，總數:"</span>+num);</span><br><span class="line">				messageProducer.send(msg);</span><br><span class="line">				session.commit();</span><br><span class="line">				num++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (JMSException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@Description</span>: 發佈消息到Topic</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@author</span> sukianata</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@date</span> 2018/6/23</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendTopicMessage</span><span class="params">()</span> <span class="keyword">throws</span> JMSException</span>&#123;</span><br><span class="line">		Destination destination=session.createTopic(<span class="string">"TopicTest"</span>);<span class="comment">//消息目的地</span></span><br><span class="line">		<span class="comment">//Topic topic=session.createTopic("TopicTest"); //這種寫法便於區分</span></span><br><span class="line">		MessageProducer messageProducer=session.createProducer(destination);</span><br><span class="line">		messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">long</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">			<span class="keyword">int</span> num =<span class="number">1</span>;</span><br><span class="line">			<span class="comment">//創建一條消息</span></span><br><span class="line">			TextMessage msg=session.createTextMessage(<span class="string">"線程："</span>+Thread.currentThread().getName()+<span class="string">"正在發佈&gt;&gt;&gt;&gt;時間："</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy/MM/dd HH:mm:ss"</span>).format(<span class="keyword">new</span> Date())+<span class="string">"&gt;&gt;&gt;&gt;ip:10.195.11.158 &gt;&gt;&gt;&gt;&gt;&gt;&gt;count:"</span>+num);</span><br><span class="line">			System.out.println(<span class="string">"線程："</span>+Thread.currentThread().getName()+<span class="string">"正在發佈&gt;&gt;&gt;&gt;時間："</span>+<span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy/MM/dd HH:mm:ss"</span>).format(<span class="keyword">new</span> Date())+<span class="string">"&gt;&gt;&gt;&gt;ip:10.195.11.158 &gt;&gt;&gt;&gt;&gt;&gt;&gt;count:"</span>+num);</span><br><span class="line">			messageProducer.send(msg);</span><br><span class="line">			session.commit();</span><br><span class="line">			num++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>&gt;&gt;&gt;&gt;消費者類</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> com.sukianata;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.Connection;</span><br><span class="line"><span class="keyword">import</span> javax.jms.ConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Destination;</span><br><span class="line"><span class="keyword">import</span> javax.jms.JMSException;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Message;</span><br><span class="line"><span class="keyword">import</span> javax.jms.MessageConsumer;</span><br><span class="line"><span class="keyword">import</span> javax.jms.MessageListener;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Queue;</span><br><span class="line"><span class="keyword">import</span> javax.jms.Session;</span><br><span class="line"><span class="keyword">import</span> javax.jms.TextMessage;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.activemq.ActiveMQConnection;</span><br><span class="line"><span class="keyword">import</span> org.apache.activemq.ActiveMQConnectionFactory;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ClassName: Consumer </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 消息消費者類</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sukianata</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/6/19</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">	<span class="comment">//默認用戶名</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String USERNAME=ActiveMQConnection.DEFAULT_USER;</span><br><span class="line">	<span class="comment">//默認登錄密碼</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PASSWORD=ActiveMQConnection.DEFAULT_PASSWORD;</span><br><span class="line">	<span class="comment">//鏈接地址</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String BROKEN_URL=ActiveMQConnection.DEFAULT_BROKER_URL;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">transient</span> Connection connection;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">transient</span> Session session;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ConnectionFactory CONNECTION_FACTORY;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">static</span>&#123;</span><br><span class="line">		CONNECTION_FACTORY=<span class="keyword">new</span> ActiveMQConnectionFactory(USERNAME, PASSWORD,BROKEN_URL);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Constructor</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> JMSException </span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Consumer</span><span class="params">()</span> <span class="keyword">throws</span> JMSException </span>&#123;</span><br><span class="line">		connection=CONNECTION_FACTORY.createConnection();</span><br><span class="line">		connection.start();</span><br><span class="line">		<span class="comment">/**</span></span><br><span class="line"><span class="comment">		 * true 表示開啟事物</span></span><br><span class="line"><span class="comment">		 * 第二個參數表示設置為手動應答模式</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		session=connection.createSession(<span class="keyword">true</span>, Session.CLIENT_ACKNOWLEDGE);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getQueueMessage</span><span class="params">(String disname)</span> <span class="keyword">throws</span> JMSException</span>&#123;</span><br><span class="line">		<span class="comment">//創建一個消息隊列 disname 為隊列，名稱</span></span><br><span class="line">		Queue queue = session.createQueue(disname);</span><br><span class="line">		MessageConsumer consumer = <span class="keyword">null</span>;</span><br><span class="line">		<span class="comment">//創建消費者</span></span><br><span class="line">		consumer=session.createConsumer(queue);</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * 另一種寫法如下：</span></span><br><span class="line"><span class="comment">		 * 	Destination destination=session.createQueue(disname);</span></span><br><span class="line"><span class="comment">		 *	MessageConsumer messageConsumer=session.createConsumer(destination);</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">			<span class="comment">//這裡採用同步應答的模式 會造成阻塞</span></span><br><span class="line">			TextMessage msg=(TextMessage) consumer.receive();</span><br><span class="line">			<span class="keyword">if</span> (msg!=<span class="keyword">null</span>) &#123;</span><br><span class="line">				msg.acknowledge();<span class="comment">//確認消息被消費，若不確認，原消息會一直在隊列中，重新啟動消費者時會重複發送。（自己理解：會一直存到消息默認的過期時間）</span></span><br><span class="line">				System.out.println(Thread.currentThread().getName()+<span class="string">": Consumer:我是消費者，我正在消費&gt;&gt;&gt;&gt;內容是：&gt;&gt;&gt;&gt;&gt;"</span>+msg.getText());</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getTopicMessage</span><span class="params">()</span> <span class="keyword">throws</span> JMSException</span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">/*  </span></span><br><span class="line"><span class="comment">		 *  //Topic 和 Queue 是Destination的子類 兩種寫法都行</span></span><br><span class="line"><span class="comment">		 *  Topic topic =session.createTopic("TopicTest");</span></span><br><span class="line"><span class="comment">		 *  MessageConsumer messageConsumer=session.createDurableSubscriber(topic, "client1");</span></span><br><span class="line"><span class="comment">		 *  messageConsumer.setMessageListener(new MyMessageListener());//異步</span></span><br><span class="line"><span class="comment">		*/</span>	</span><br><span class="line">		Destination destination=session.createTopic(<span class="string">"TopicTest"</span>);<span class="comment">//這裡的topic名稱要與生產者保持一致才能接收到消息</span></span><br><span class="line">		MessageConsumer messageConsumer=session.createConsumer(destination);<span class="comment">//區別于上面createDurableSubscriber的形式，這種創建消費者的方法比較通用</span></span><br><span class="line">		messageConsumer.setMessageListener(<span class="keyword">new</span>  MyMessageListener());<span class="comment">//異步應答，只需實現MessageListener類，并重寫onMessage方法就行</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">MyMessageListener</span> <span class="keyword">implements</span> <span class="title">MessageListener</span></span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(Message message)</span> </span>&#123;</span><br><span class="line">			TextMessage textMessage=(TextMessage) message;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				message.acknowledge();</span><br><span class="line">				System.out.println(<span class="string">"接收訂閱主題："</span>+textMessage.getText());</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>&gt;&gt;&gt;&gt;三個測試類</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.JMSException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sukianata.Consumer;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ClassName: TestConsumer </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sukianata</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/6/13</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestQueueConsumer</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> JMSException </span>&#123;</span><br><span class="line">		Consumer consumer=<span class="keyword">new</span> Consumer();</span><br><span class="line">		TestQueueConsumer testConsumer=<span class="keyword">new</span> TestQueueConsumer();</span><br><span class="line">		ExecutorService service = Executors.newFixedThreadPool(<span class="number">1024</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">20</span>; i++) &#123;</span><br><span class="line">            service.execute(<span class="keyword">new</span> Thread(testConsumer.new ConsumerMQ(consumer)));</span><br><span class="line">        &#125;</span><br><span class="line">		service.shutdown();</span><br><span class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">			<span class="keyword">if</span> (service.isTerminated()) &#123;</span><br><span class="line">				System.out.println(<span class="string">"Thread end"</span>);</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerMQ</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">		Consumer consumer;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">ConsumerMQ</span><span class="params">(Consumer consumer)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.consumer=consumer;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					consumer.getQueueMessage(<span class="string">"Test-mq"</span>);</span><br><span class="line">					Thread.sleep(<span class="number">10</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.jms.JMSException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sukianata.Producter;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ClassName: TestMq </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sukianata</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/6/13</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestQueueProducter</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> JMSException </span>&#123;</span><br><span class="line">		Producter producter=<span class="keyword">new</span> Producter();</span><br><span class="line">		TestQueueProducter testMq=<span class="keyword">new</span> TestQueueProducter();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Thread.sleep(<span class="number">100</span>);</span><br><span class="line">			ExecutorService service = Executors.newFixedThreadPool(<span class="number">1024</span>);</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">	            service.execute(<span class="keyword">new</span> Thread(testMq.new ProductorMq(producter)));</span><br><span class="line">	        &#125;</span><br><span class="line">			service.shutdown();</span><br><span class="line">			<span class="keyword">while</span>(!service.isTerminated()) &#123;&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductorMq</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">		</span><br><span class="line">		Producter producter;</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">ProductorMq</span><span class="params">(Producter producter)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.producter=producter;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				producter.sendQueueMessage(<span class="string">"Test-mq"</span>);</span><br><span class="line">				Thread.sleep(<span class="number">10</span>);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sukianata.Consumer;</span><br><span class="line"><span class="keyword">import</span> com.sukianata.Producter;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ClassName: TopicProducer </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: TODO</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sukianata</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2018/6/13</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTopic</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		TestTopic topicTest= <span class="keyword">new</span> TestTopic();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Thread.sleep(<span class="number">100</span>);</span><br><span class="line">			ExecutorService service = Executors.newFixedThreadPool(<span class="number">1024</span>);</span><br><span class="line">			Consumer consumer =<span class="keyword">new</span> Consumer();</span><br><span class="line">			Producter producter=<span class="keyword">new</span> Producter();</span><br><span class="line">			</span><br><span class="line">	        service.execute(<span class="keyword">new</span> Thread(topicTest.new ProductorMq(producter)));</span><br><span class="line">	          </span><br><span class="line">	        service.execute(<span class="keyword">new</span> Thread(topicTest.new ComsumerMq(consumer)));</span><br><span class="line">	        </span><br><span class="line">			service.shutdown();</span><br><span class="line">			<span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">				<span class="keyword">if</span> (service.isTerminated()) &#123;</span><br><span class="line">					System.out.println(<span class="string">"Thread end"</span>);</span><br><span class="line">					<span class="keyword">break</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ProductorMq</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">		</span><br><span class="line">		Producter producter;</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">ProductorMq</span><span class="params">(Producter producter)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.producter=producter;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					producter.sendTopicMessage();</span><br><span class="line">					Thread.sleep(<span class="number">10</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ComsumerMq</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">		Consumer consumer;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">ComsumerMq</span><span class="params">(Consumer consumer)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.consumer=consumer;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					consumer.getTopicMessage();</span><br><span class="line">					Thread.sleep(<span class="number">10</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="ActiveMQ消息持久化機制"><a href="#ActiveMQ消息持久化機制" class="headerlink" title="ActiveMQ消息持久化機制"></a>ActiveMQ消息持久化機制</h1><p>ActiveMQ支持多種數據持久化機制。  </p>
+<p><strong>JDBC持久化方式</strong><br>採用該方式時，數據庫會自動創建三個表activemq_msgs，activemq_acks和activemq_lock。第一個表用於存儲消息，Queue和Topic的消息都存儲在這個表中。<br>(1)表說明<br>activemq_msgs用于存储消息，Queue和Topic都存储在这个表中：<br>ID：自增的数据库主键<br>CONTAINER：消息的Destination<br>MSGID_PROD：消息发送者客户端的主键<br>MSG_SEQ：是发送消息的顺序，MSGID_PROD+MSG_SEQ可以组成JMS的MessageID<br>EXPIRATION：消息的过期时间，存储的是从1970-01-01到现在的毫秒数<br>MSG：消息本体的Java序列化对象的二进制数据<br>PRIORITY：优先级，从0-9，数值越大优先级越高  </p>
+<p>activemq_acks用于存储订阅关系。如果是持久化Topic，订阅者和服务器的订阅关系在这个表保存：<br>主要的数据库字段如下：<br>CONTAINER：消息的Destination<br>SUB_DEST：如果是使用Static集群，这个字段会有集群其他系统的信息<br>CLIENT_ID：每个订阅者都必须有一个唯一的客户端ID用以区分<br>SUB_NAME：订阅者名称<br>SELECTOR：选择器，可以选择只消费满足条件的消息。条件可以用自定义属性实现，可支持多属性AND和OR操作<br>LAST_ACKED_ID：记录消费过的消息的ID。  </p>
+<p>表activemq_lock在集群环境中才有用，只有一个Broker可以获得消息，称为Master Broker，其他的只能作为备份等待Master Broker不可用，才可能成为下一个Master Broker。<br>这个表用于记录哪个Broker是当前的Master Broker。<br>(2)配置方式<br>修改安裝目錄下的conf/activemq.xml文件，需要做兩步操作，第一步定義數據源，第二步引用數據源(和spring 配置數據源差不多)，配置如下:<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;persistenceAdapter&gt;</span><br><span class="line">   &lt;jdbcPersistenceAdapter dataSource=<span class="string">"#derby-ds"</span> createTablesOnStartup=<span class="string">"false"</span>/&gt;</span><br><span class="line"> &lt;/persistenceAdapter&gt;</span><br></pre></td></tr></table></figure></p>
+<p><strong>備註：</strong><br>createTablesOnStartup表示是否在启动的时候创建数据表；<br>dataSource引用時別忘了加”#”;<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=<span class="string">"derby-ds"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"org.apache.commons.dbcp.BasicDataSource"</span> destroy-method=<span class="string">"close"</span>&gt;  </span><br><span class="line">	&lt;property name=<span class="string">"driverClassName"</span> value=<span class="string">"you driver"</span>/&gt;  </span><br><span class="line">	&lt;property name=<span class="string">"url"</span> value=<span class="string">"your url"</span>/&gt;  </span><br><span class="line">	&lt;property name=<span class="string">"username"</span> value=<span class="string">"your username"</span>/&gt;  </span><br><span class="line">	&lt;property name=<span class="string">"password"</span> value=<span class="string">"your pwd"</span>/&gt;  </span><br><span class="line">	&lt;property name=<span class="string">"maxActive"</span> value=<span class="string">"200"</span>/&gt;  </span><br><span class="line">	&lt;property name=<span class="string">"poolPreparedStatements"</span> value=<span class="string">"true"</span>/&gt;  </span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure></p>
+<p><strong>AMQ方式</strong><br> 這種方式據說已經不推薦使用。<br><strong>KahaDB方式</strong><br>這是現在默認的持久化方式。它的機制是基於日誌文件、索引和緩存。<br>配置方式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;persistenceAdapter&gt;</span><br><span class="line">    &lt;kahaDB directory=<span class="string">"$&#123;activemq.data&#125;/activemq-data"</span> journalMaxFileLength=<span class="string">"16mb"</span>/&gt;</span><br><span class="line">&lt;/persistenceAdapter&gt;</span><br><span class="line">&lt;!--directory : 指定持久化消息的存储目录--&gt;</span><br><span class="line">&lt;!--journalMaxFileLength : 指定保存消息的日志文件大小，具体根据你的实际应用配置 --&gt;</span><br></pre></td></tr></table></figure></p>
+<p>KahaDB的主要特性：<br>1、日志形式存储消息；<br>2、消息索引以B-Tree结构存储，可以快速更新；<br>3、完全支持JMS事务；<br>4、支持多种恢复机制；<br>KahaDB的結構：<br>消息存儲在基於文件的數據日誌中，如果消息發送成功，變標記為可刪除。系統會週期性的清除或歸檔日誌文件。<br>消息文件的位置索引存儲在內存中，這樣能快速定位。定期將內存中的消息索引，保存到metaDatastore中，避免大量消息未發送時，消息索引佔用過多內存。<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/201806230949.gif" alt="">  </p>
+<p><strong>&gt;&gt;&gt;Data logs</strong><br> 用於存儲消息日誌，當大小超過規定的最大值，會新建一個文件。每個消息在Data logs中有計數引用，當消息不需要了，系統會自動刪除或歸檔。  </p>
+<p><strong>&gt;&gt;&gt;Metadata cache</strong><br>緩存用於存放在線消費者的消息，如果消費者已經快速消費完成，那麼這些消息就不需要寫入磁盤。<br>Btree索引會根據MessageID創建索引，用於快速的查找消息。这个索引同样维护持久化订阅者与Destination的关系，以及每个消费者消费消息的指针。  </p>
+<p><strong>&gt;&gt;&gt;Metadata store</strong><br>在db.data文件中保存消息日誌中消息的元數據，也是B-Tree結構存儲，定時從MetaData cache中更新數據。MetaData store也會備份一些在消息日誌中存在的信息，這樣可以讓Broker實例快速啟動，即便Metadata store文件被破壞或者誤刪除。broker可以讀取Data logs 恢復過來，只是速度相對慢。<br><strong>LevelDB方式</strong><br>從ActiveMQ5.6版本后推出，點擊查看<a href="https://blog.csdn.net/u012758088/article/details/78055613" target="_blank" rel="noopener">LevelDB基本結構</a>。</p>
+<p><strong>綜合性能比較</strong><br>LevelDB方式&gt;KahaDB方式&gt;JDBC方式</p>
+<blockquote>
+<p><strong>備註：所有資料來源于網絡，供學習、記錄、交流用。</strong></p>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="HuangFan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java-activemq/" rel="tag"># java,activemq</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/13/ConcurrentHashMap原理分析/" rel="next" title="ConcurrentHashMap原理分析">
+                <i class="fa fa-chevron-left"></i> ConcurrentHashMap原理分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/09/LinOTP服務的搭建與應用/" rel="prev" title="LinOTP服務的搭建與應用">
+                LinOTP服務的搭建與應用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjgwNy8xMzM0Mw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">HuangFan</p>
+              <p class="site-description motion-element" itemprop="description">Java</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/Tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/man-tou-hao-chi-bu/activities" target="_blank" title="知乎" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什麼是消息隊列MQ？"><span class="nav-number">1.</span> <span class="nav-text">什麼是消息隊列MQ？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#activemq的安裝"><span class="nav-number">2.</span> <span class="nav-text">activemq的安裝</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#創建一個ActiveMQ工程"><span class="nav-number">3.</span> <span class="nav-text">創建一個ActiveMQ工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ActiveMQ消息持久化機制"><span class="nav-number">4.</span> <span class="nav-text">ActiveMQ消息持久化機制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangFan</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>

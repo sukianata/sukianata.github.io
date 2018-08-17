@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="java基礎總結">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java基礎">
+<meta property="og:url" content="http://sukianata.coding.me/2018/05/31/java基礎/index.html">
+<meta property="og:site_name" content="清露晨流，新桐初引">
+<meta property="og:description" content="java基礎總結">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/Thread.png">
+<meta property="og:updated_time" content="2018-06-23T02:26:58.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java基礎">
+<meta name="twitter:description" content="java基礎總結">
+<meta name="twitter:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/Thread.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://sukianata.coding.me/2018/05/31/java基礎/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>java基礎 | 清露晨流，新桐初引</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">清露晨流，新桐初引</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">boring,boring,boring</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-/tags/"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />Commonweal 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/05/31/java基礎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">java基礎
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/05/31 09:34:08" itemprop="dateCreated datePublished" datetime="2018-05-31T09:34:08+08:00">2018/05/31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018/06/23 10:26:58" itemprop="dateModified" datetime="2018-06-23T10:26:58+08:00">2018/06/23</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">java基礎總結</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="面向對象的特征有哪些？"><a href="#面向對象的特征有哪些？" class="headerlink" title="面向對象的特征有哪些？"></a>面向對象的特征有哪些？</h4><ul>
+<li>封裝 隱藏一切可隱藏的東西，只向外提供簡單的編程接口</li>
+<li>繼承</li>
+<li>多態：方法重載和重寫</li>
+<li>抽象：只關注有哪些行為和屬性，不關注細節 </li>
+</ul>
+<h4 id="public，private，protected以及default的區別？"><a href="#public，private，protected以及default的區別？" class="headerlink" title="public，private，protected以及default的區別？"></a>public，private，protected以及default的區別？</h4><ul>
+<li><p>橫坐標：當前類&gt;&gt;同包&gt;&gt;子類&gt;&gt;其它包  </p>
+</li>
+<li><p>縱坐標：public&gt;&gt;protected&gt;&gt;default&gt;&gt;private</p>
+<h4 id="java的數據類型"><a href="#java的數據類型" class="headerlink" title="java的數據類型"></a>java的數據類型</h4></li>
+<li>基本類型 </li>
+<li>int,double,byte,boolean,long,float,short,char</li>
+<li>引用類型</li>
+<li>eg:String</li>
+<li>枚舉類型（java 5以後）  </li>
+</ul>
+<h4 id="java的自動拆箱與裝箱機制"><a href="#java的自動拆箱與裝箱機制" class="headerlink" title="java的自動拆箱與裝箱機制"></a>java的自動拆箱與裝箱機制</h4><p> 其實就是基本數據類型與引用類型的自動轉換  </p>
+<h4 id="IntegerCache的範圍"><a href="#IntegerCache的範圍" class="headerlink" title="IntegerCache的範圍"></a>IntegerCache的範圍</h4><p>-128~127  </p>
+<h4 id="amp-和-amp-amp-的區別"><a href="#amp-和-amp-amp-的區別" class="headerlink" title="&amp;和&amp;&amp;的區別"></a>&amp;和&amp;&amp;的區別</h4><p> &amp;是按位于；&amp;&amp;是邏輯與；按位與的作用通常作用是對某些位清零或保留某些位。  </p>
+<h4 id="stack-heap和meathod-area-的用法"><a href="#stack-heap和meathod-area-的用法" class="headerlink" title="stack,heap和meathod area 的用法"></a>stack,heap和meathod area 的用法</h4><h4 id="首先明確堆和棧存放的東西是什麼。"><a href="#首先明確堆和棧存放的東西是什麼。" class="headerlink" title="##首先明確堆和棧存放的東西是什麼。"></a>##首先明確堆和棧存放的東西是什麼。</h4><ul>
+<li>棧：基本數據類型的變量，一個對象的引用，函數調用的現場保存</li>
+<li>堆：new 或構造器創建的對象，堆是垃圾收集器管理的主要區域</li>
+<li>方法區：方法區和堆都是各個線程共享的內存區域。用於存儲已經被jvm加載的類信息，常量，靜態變量登數據。字面量如”hello”,100等是放在常量池中，jdk1.7以前常量池是方法區的一部分，1.7以後常量池在堆中。  </li>
+</ul>
+<h4 id="他們的特點是什麼？"><a href="#他們的特點是什麼？" class="headerlink" title="##他們的特點是什麼？"></a>##他們的特點是什麼？</h4><p>  棧後進先出，空間小，操作起來速度快，大量的對象存在堆空間，他們的大小可通過jvm的啟動參數來調整，棧空間用光了，會引發StackOverflowError，而堆和常量池空間不足會引發OutofMemoryError </p>
+<h4 id="java四捨五入的原理是什麼？"><a href="#java四捨五入的原理是什麼？" class="headerlink" title="java四捨五入的原理是什麼？"></a>java四捨五入的原理是什麼？</h4><p>加0.5然後向下取整。  </p>
+<h4 id="switch可以作用在哪些類型的變量上？"><a href="#switch可以作用在哪些類型的變量上？" class="headerlink" title="switch可以作用在哪些類型的變量上？"></a>switch可以作用在哪些類型的變量上？</h4><p>java5以前：byte,short,char,int.<br>java5:引入枚舉類型<br>java7:引入String類型  </p>
+<h4 id="和equal的區別"><a href="#和equal的區別" class="headerlink" title="==和equal的區別"></a>==和equal的區別</h4><p>==看看左右是不是一個東西，equal是看左右是否長的一樣。<br> 若x,y滿足x.equals(y)==true,則他們的hash code 一定相同，反過來不成立。<br>有關==和equals的更詳細總結，可參考<a href="www.baidu.com">這裡</a>  </p>
+<h4 id="java到底是值傳遞還是引用傳遞？"><a href="#java到底是值傳遞還是引用傳遞？" class="headerlink" title="java到底是值傳遞還是引用傳遞？"></a>java到底是值傳遞還是引用傳遞？</h4><p>值傳遞。首先明確值傳遞和引用傳遞的概念：  </p>
+<ul>
+<li>值傳遞：表示方法接收的是調用者提供的值</li>
+<li>引用傳遞：表示方法接收的是調用者提供的變量地址  </li>
+</ul>
+<p><strong>方法得到是所有參數值得一個拷貝，方法不能修改任何傳遞給它的參數變量的內容</strong>  </p>
+<p>因此，在java中，  </p>
+<ul>
+<li>一個方法不能修改一個基本數據類型的參數（針對參數為基本數據類型）</li>
+<li>一個方法不能讓對象參數引用一個新對象（針對參數為引用類型） </li>
+</ul>
+<p>下面的方法解釋為什麼java中不存在引用傳遞。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Employee a = <span class="keyword">new</span> Employee(<span class="string">"tom"</span>,<span class="number">20</span>);  </span><br><span class="line"></span><br><span class="line">Employee b = <span class="keyword">new</span> Employee(<span class="string">"jack"</span>,<span class="number">19</span>);  </span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(Employee x,Employee y)</span></span>&#123; </span><br><span class="line">     Employee temp=x;  </span><br><span class="line">	 x=y;  </span><br><span class="line">	 y=temp;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果是引用傳遞，swap可以實現交換兩個對象值得效果，然而最終結果是swap并沒有改變存儲在a和b中的對象引用，x和y被初始化位兩個對象引用的拷貝。  </p>
+<h4 id="String、StringBuilder、StringBuffer的區別"><a href="#String、StringBuilder、StringBuffer的區別" class="headerlink" title="String、StringBuilder、StringBuffer的區別"></a>String、StringBuilder、StringBuffer的區別</h4><p>String只讀。其餘兩種可對字符串進行修改，StringBuilder（1.5引入）和StringBuffer完全相同，區別在於StringBuilder線程不安全，效率比StringBuffer高。</p>
+<h4 id="重載和重寫的區別"><a href="#重載和重寫的區別" class="headerlink" title="重載和重寫的區別"></a>重載和重寫的區別</h4><p>重載發生在同一個類中，重寫發生在子類與父類之間，前者是編譯時多態性，（編譯時就知道要調用哪一個方法），後者是運行時多態性。</p>
+<h4 id="JVM加載class文件的原理機制"><a href="#JVM加載class文件的原理機制" class="headerlink" title="JVM加載class文件的原理機制"></a>JVM加載class文件的原理機制</h4><p>類的裝載有類加載器（ClassLoader)和它的子類實現。過程如下:  </p>
+<p><strong>加載</strong>：把.class文件中的數據讀到內存中  </p>
+<p>&nbsp;&nbsp;|<br>&nbsp;&nbsp;| </p>
+<p><strong>連接</strong>：（驗證、準備、解析）為靜態變量分配內存，并設置默認的初始值，將符號引用替換為直接引用。  </p>
+<p>&nbsp;&nbsp;|<br>&nbsp;&nbsp;|  </p>
+<p><strong>初始化</strong>：</p>
+<ul>
+<li>如果類存在直接的父類且這個父類還未初始化，則先初始化父類</li>
+<li>如果類中存在初始化語句則依次執行  </li>
+</ul>
+<h4 id="如何實現對象的克隆"><a href="#如何實現對象的克隆" class="headerlink" title="如何實現對象的克隆"></a>如何實現對象的克隆</h4><p>此處列舉深度克隆的方式。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T extends Serializable&gt; <span class="function">T <span class="title">clone</span><span class="params">(T obj)</span> <span class="keyword">throws</span> <span class="title">Exception</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="comment">//將對象寫入流中</span></span><br><span class="line">  ByteOutputStream bout = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">  ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStram(bout);</span><br><span class="line">  oos.write(obj);  </span><br><span class="line">  <span class="comment">//從流中讀取對象</span></span><br><span class="line">  ByteInputStream bin = <span class="keyword">new</span> ByteArrayInputStream(bout.toByteArray());</span><br><span class="line">  ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(bin);</span><br><span class="line">  <span class="keyword">return</span> (T)ois.readObject();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>參考 <a href="https://www.cnblogs.com/Qian123/p/5710533.html" target="_blank" rel="noopener">實現對象克隆的兩種方式</a></p>
+<h4 id="常見的異常分類"><a href="#常見的異常分類" class="headerlink" title="常見的異常分類"></a>常見的異常分類</h4><p>關於Exception更多詳細信息點擊<a href="http://www.baidu.com" target="_blank" rel="noopener">這裡</a>  </p>
+<h4 id="闡述ArrayList、Vector、LinkedList的存儲性能和特性"><a href="#闡述ArrayList、Vector、LinkedList的存儲性能和特性" class="headerlink" title="闡述ArrayList、Vector、LinkedList的存儲性能和特性"></a>闡述ArrayList、Vector、LinkedList的存儲性能和特性</h4><ul>
+<li><p>ArrayList和Vector都是使用數組的方式來存儲數據，查詢速度快，插入數據慢。  </p>
+</li>
+<li><p>Vector的方法有synchronized 修飾，性能上比ArrayList差。  </p>
+</li>
+<li><p>LinkedList使用雙向鏈錶實現存儲。插入速度快。</p>
+</li>
+<li><p>Vector,Hashtable,Dictionary,BitSet,Stack,Properties是遺留容器，不推薦使用。  </p>
+</li>
+<li><p>ArrayList和LinkedList都是非線程安全的，可用Collections中synchronizedList方法變為線程安全的</p>
+</li>
+</ul>
+<h4 id="Colledtion和Collections的區別"><a href="#Colledtion和Collections的區別" class="headerlink" title="Colledtion和Collections的區別"></a>Colledtion和Collections的區別</h4><p>Collection是Set,List登容器的父接口；Collections是一個工具類，提供靜態方法來輔助容器操作。</p>
+<h4 id="TreeMap和TreeSet在排序時如何比較元素？Collections工具類中的sort-方法如何比較元素？"><a href="#TreeMap和TreeSet在排序時如何比較元素？Collections工具類中的sort-方法如何比較元素？" class="headerlink" title="TreeMap和TreeSet在排序時如何比較元素？Collections工具類中的sort()方法如何比較元素？"></a>TreeMap和TreeSet在排序時如何比較元素？Collections工具類中的sort()方法如何比較元素？</h4><p>簡單記：  </p>
+<ul>
+<li><p>實現Comparable接口，重寫compareTo方法  </p>
+</li>
+<li><p>採用Collections中sort方法，如下 </p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//obj為要排序的對象，第二個參數為自定義的排序規則</span></span><br><span class="line">Collections.sort(obj,<span class="keyword">new</span> Comparator&lt;Object&gt;()&#123;  </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Object o1,Object o2)</span></span>&#123;  </span><br><span class="line">   <span class="keyword">return</span> o1.hashCode()-o2.hashCode();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Thread類的sleep-方法和對象的wait-方法都可以讓線程暫停執行，它們有什麼區別？"><a href="#Thread類的sleep-方法和對象的wait-方法都可以讓線程暫停執行，它們有什麼區別？" class="headerlink" title="Thread類的sleep()方法和對象的wait()方法都可以讓線程暫停執行，它們有什麼區別？"></a>Thread類的sleep()方法和對象的wait()方法都可以讓線程暫停執行，它們有什麼區別？</h4><p>它們的共同點是調用此方法會讓當前線程暫停執行制定的時間。</p>
+<ul>
+<li>sleep方法是Thread類的靜態方法，但對象鎖依然保持。</li>
+<li>wait()方法是Object類的方法，調用后會放棄當前對象的鎖，進入對象的等待池，只有調用對象的nodify()或notifYAll()才能喚醒等待池中的線程進入等鎖池，如果線程重新獲得對象的鎖就可以進入就緒狀態。</li>
+</ul>
+<h4 id="sleep方法和yield方法有什麼區別？"><a href="#sleep方法和yield方法有什麼區別？" class="headerlink" title="sleep方法和yield方法有什麼區別？"></a>sleep方法和yield方法有什麼區別？</h4><ul>
+<li>sleep給其它線程運行時會不考慮線程優先級，會給底優先級線程以運行的機會，yield只能把機會給相同優先級或更高優先級的線程</li>
+<li>線程執行sleep后進入阻塞狀態，執行yield方法后進入就緒狀態</li>
+<li>sleep方法需要拋出InterruptedException</li>
+<li>sleep方法比yield（跟操作系統的cpu有關）具有更好的移植性  </li>
+</ul>
+<h4 id="請說出與線程同步以及線程調度相關的方法"><a href="#請說出與線程同步以及線程調度相關的方法" class="headerlink" title="請說出與線程同步以及線程調度相關的方法"></a>請說出與線程同步以及線程調度相關的方法</h4><ul>
+<li>wait():使一個線程處於阻塞狀態，並且釋放對象所持有的鎖；</li>
+<li>sleep():讓線程進入睡眠狀態</li>
+<li>notify():喚醒一個處於等待狀態的線程，但不能確切的喚醒某一個等待的線程，而是有JVM確定</li>
+<li>notifyAll():喚醒所有處於等待狀態的線程，該方法並不是將對象的鎖給所有線程，而是讓他們去競爭，只有獲得鎖的線程才能進入就緒狀態。</li>
+</ul>
+<h4 id="編寫多線程有幾種實現方法"><a href="#編寫多線程有幾種實現方法" class="headerlink" title="編寫多線程有幾種實現方法"></a>編寫多線程有幾種實現方法</h4><p>java5以前有兩種：</p>
+<ul>
+<li>繼承Thread類</li>
+<li>實現Runnable接口<br>兩種方式都需要通過重寫run()方法來定義線程的行為，後者更加靈活<br>java5以後還可以通過：實現Callable和ExecutorService等來創建（待補充）。</li>
+</ul>
+<h4 id="什麼是線程池？"><a href="#什麼是線程池？" class="headerlink" title="什麼是線程池？"></a>什麼是線程池？</h4><p>“池化技術”產生的原因：盡可能的減少對象創建和銷毀的次數，從而減少資源的消耗。如線程池，數據庫連接池。<br>線程池就是事先創建若干個可執行的線程放入一個容器中，需要的時候從池中獲取而不需要自行創建，使用完放回池中。<br>線程工具類Executors提供一些靜態工廠方法，生成一些常用的線程池。</p>
+<ul>
+<li>newSingleThreadExecutor：單線程線程池，該線程池保證所有任務的執行順序按照任務的提交順序執行。一個不行了另一個接著上。</li>
+<li>newFixedThreadPool:創建固定大小的線程池，線程池大小一旦達到最大值就保持不變。</li>
+<li>newCachedThreadPool:可緩存的線程池。當線程池大小超過處理任務所需線程數，則回收空閒線程，若不夠用，則新建線程來補充，最終線程池大小取決於jvm能夠創建的最大線程數</li>
+<li>newScheduledThreadPool:創建一個大小無線的線程池。該線程池支持定時以及週期性執行任務的需求。  </li>
+</ul>
+<h4 id="線程的基本狀態以及狀態之間的關係"><a href="#線程的基本狀態以及狀態之間的關係" class="headerlink" title="線程的基本狀態以及狀態之間的關係"></a>線程的基本狀態以及狀態之間的關係</h4><p><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/Thread.png" alt=""><br>說明：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Blocked in Object<span class="string">'s Wait Pool  對象等待池  </span></span><br><span class="line"><span class="string">Blocked in Object'</span>s Lock Pool等鎖池  </span><br><span class="line">Runnable  就緒狀態  </span><br><span class="line">Running運行狀態</span><br><span class="line">Blocked阻塞狀態</span><br></pre></td></tr></table></figure></p>
+<h4 id="synchronized和java-util-concurrent-locks-Lock的異同"><a href="#synchronized和java-util-concurrent-locks-Lock的異同" class="headerlink" title="synchronized和java.util.concurrent.locks.Lock的異同"></a>synchronized和java.util.concurrent.locks.Lock的異同</h4><p>Lock能完成synchronized所實現的所有功能。主要不同點：Lock有比synchronized更精確的線程語義和更好的性能，而且不強制性的要求一定要獲得鎖。synchronized會自動釋放鎖，而Lock一定要求程序員手工釋放。</p>
+<h4 id="java中有幾種類型的流"><a href="#java中有幾種類型的流" class="headerlink" title="java中有幾種類型的流"></a>java中有幾種類型的流</h4><p>字節流和字符流。字節流繼承于InputStream,OutputStream,字符流繼承與Reader,Writer。<br>編程實現文件拷貝，此處列出NIO的形式。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">fileCopyNIO</span><span class="params">(String soure,String target)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">  <span class="keyword">try</span>(FileInputStram in =<span class="keyword">new</span> FileInputStream(source))&#123;</span><br><span class="line">	 <span class="keyword">try</span>(FileOutputStream out = <span class="keyword">new</span> FileOutputStream(target))&#123;</span><br><span class="line">	   FileChannel inChannel = in.getChannel();</span><br><span class="line">	   FileChannel outChannel =out.getChannel();</span><br><span class="line">	   ByteBuffer buffer = ByteBuffer.allocate(<span class="number">4096</span>);</span><br><span class="line">       <span class="keyword">while</span>(inChannel.read(buffer) !=-<span class="number">1</span>)&#123;</span><br><span class="line">	   buffer.flip();</span><br><span class="line">	   outChannel.write(buffer);</span><br><span class="line">	   buffer.clear();</span><br><span class="line">	  &#125;</span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此處用到了java7的新特性try…with..resource格式。  </p>
+<blockquote>
+<p><strong>備註：所有資料來源于網絡，供學習、記錄、交流用。</strong></p>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="HuangFan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/31/javaweb/" rel="prev" title="javaweb">
+                javaweb <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjgwNy8xMzM0Mw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">HuangFan</p>
+              <p class="site-description motion-element" itemprop="description">Java</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/Tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/man-tou-hao-chi-bu/activities" target="_blank" title="知乎" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#面向對象的特征有哪些？"><span class="nav-number">1.</span> <span class="nav-text">面向對象的特征有哪些？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#public，private，protected以及default的區別？"><span class="nav-number">2.</span> <span class="nav-text">public，private，protected以及default的區別？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#java的數據類型"><span class="nav-number">3.</span> <span class="nav-text">java的數據類型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#java的自動拆箱與裝箱機制"><span class="nav-number">4.</span> <span class="nav-text">java的自動拆箱與裝箱機制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IntegerCache的範圍"><span class="nav-number">5.</span> <span class="nav-text">IntegerCache的範圍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#amp-和-amp-amp-的區別"><span class="nav-number">6.</span> <span class="nav-text">&amp;和&amp;&amp;的區別</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stack-heap和meathod-area-的用法"><span class="nav-number">7.</span> <span class="nav-text">stack,heap和meathod area 的用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#首先明確堆和棧存放的東西是什麼。"><span class="nav-number">8.</span> <span class="nav-text">##首先明確堆和棧存放的東西是什麼。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#他們的特點是什麼？"><span class="nav-number">9.</span> <span class="nav-text">##他們的特點是什麼？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#java四捨五入的原理是什麼？"><span class="nav-number">10.</span> <span class="nav-text">java四捨五入的原理是什麼？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#switch可以作用在哪些類型的變量上？"><span class="nav-number">11.</span> <span class="nav-text">switch可以作用在哪些類型的變量上？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#和equal的區別"><span class="nav-number">12.</span> <span class="nav-text">==和equal的區別</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#java到底是值傳遞還是引用傳遞？"><span class="nav-number">13.</span> <span class="nav-text">java到底是值傳遞還是引用傳遞？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String、StringBuilder、StringBuffer的區別"><span class="nav-number">14.</span> <span class="nav-text">String、StringBuilder、StringBuffer的區別</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重載和重寫的區別"><span class="nav-number">15.</span> <span class="nav-text">重載和重寫的區別</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JVM加載class文件的原理機制"><span class="nav-number">16.</span> <span class="nav-text">JVM加載class文件的原理機制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何實現對象的克隆"><span class="nav-number">17.</span> <span class="nav-text">如何實現對象的克隆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常見的異常分類"><span class="nav-number">18.</span> <span class="nav-text">常見的異常分類</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#闡述ArrayList、Vector、LinkedList的存儲性能和特性"><span class="nav-number">19.</span> <span class="nav-text">闡述ArrayList、Vector、LinkedList的存儲性能和特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Colledtion和Collections的區別"><span class="nav-number">20.</span> <span class="nav-text">Colledtion和Collections的區別</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TreeMap和TreeSet在排序時如何比較元素？Collections工具類中的sort-方法如何比較元素？"><span class="nav-number">21.</span> <span class="nav-text">TreeMap和TreeSet在排序時如何比較元素？Collections工具類中的sort()方法如何比較元素？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thread類的sleep-方法和對象的wait-方法都可以讓線程暫停執行，它們有什麼區別？"><span class="nav-number">22.</span> <span class="nav-text">Thread類的sleep()方法和對象的wait()方法都可以讓線程暫停執行，它們有什麼區別？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sleep方法和yield方法有什麼區別？"><span class="nav-number">23.</span> <span class="nav-text">sleep方法和yield方法有什麼區別？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#請說出與線程同步以及線程調度相關的方法"><span class="nav-number">24.</span> <span class="nav-text">請說出與線程同步以及線程調度相關的方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#編寫多線程有幾種實現方法"><span class="nav-number">25.</span> <span class="nav-text">編寫多線程有幾種實現方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什麼是線程池？"><span class="nav-number">26.</span> <span class="nav-text">什麼是線程池？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#線程的基本狀態以及狀態之間的關係"><span class="nav-number">27.</span> <span class="nav-text">線程的基本狀態以及狀態之間的關係</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#synchronized和java-util-concurrent-locks-Lock的異同"><span class="nav-number">28.</span> <span class="nav-text">synchronized和java.util.concurrent.locks.Lock的異同</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#java中有幾種類型的流"><span class="nav-number">29.</span> <span class="nav-text">java中有幾種類型的流</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangFan</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>

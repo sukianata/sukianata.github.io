@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前段時間搭建靜態資源服務器的時候接觸到了nginx，先前只是用略有耳聞，上次算是一個簡單的接觸，今天回過頭來做一個總結。">
+<meta name="keywords" content="nginx,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windows下nginx的搭建與使用示例">
+<meta property="og:url" content="http://sukianata.coding.me/2018/06/02/windows下nginx的搭建與使用示例/index.html">
+<meta property="og:site_name" content="清露晨流，新桐初引">
+<meta property="og:description" content="前段時間搭建靜態資源服務器的時候接觸到了nginx，先前只是用略有耳聞，上次算是一個簡單的接觸，今天回過頭來做一個總結。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/tomcat-img.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/20180506021140.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/demo1.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/demo2.png">
+<meta property="og:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/demo3.png">
+<meta property="og:updated_time" content="2018-06-23T02:26:54.616Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="windows下nginx的搭建與使用示例">
+<meta name="twitter:description" content="前段時間搭建靜態資源服務器的時候接觸到了nginx，先前只是用略有耳聞，上次算是一個簡單的接觸，今天回過頭來做一個總結。">
+<meta name="twitter:image" content="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/tomcat-img.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://sukianata.coding.me/2018/06/02/windows下nginx的搭建與使用示例/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>windows下nginx的搭建與使用示例 | 清露晨流，新桐初引</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">清露晨流，新桐初引</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">boring,boring,boring</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-/tags/"></i> <br />Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />Commonweal 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sukianata.coding.me/2018/06/02/windows下nginx的搭建與使用示例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HuangFan">
+      <meta itemprop="description" content="Java">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="清露晨流，新桐初引">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">windows下nginx的搭建與使用示例
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018/06/02 10:28:49" itemprop="dateCreated datePublished" datetime="2018-06-02T10:28:49+08:00">2018/06/02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018/06/23 10:26:54" itemprop="dateModified" datetime="2018-06-23T10:26:54+08:00">2018/06/23</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+              <div class="post-description">前段時間搭建靜態資源服務器的時候接觸到了nginx，先前只是用略有耳聞，上次算是一個簡單的接觸，今天回過頭來做一個總結。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="什麼是ngnix"><a href="#什麼是ngnix" class="headerlink" title="什麼是ngnix"></a>什麼是ngnix</h1><ol>
+<li><strong>先了解什麼是代理服務器</strong><br>一部機器通過一個服務器發送請求到互聯網上，這個服務器就叫做代理服務器。<ul>
+<li><strong>正向代理</strong> 有客戶端A，代理服務器B，目標服務器C，A想訪問C，但訪問不了，B能訪問C，於是A就通過B來訪問，B把A的請求發給C并將C的返回內容返回給A，這就是正向代理，比如常說的”翻墻”。</li>
+<li><strong>反向代理</strong> 同上，A想從B上請求某個資源，B先從C那請求資源然後返回給A，A若想要其它資源也可以通過B來獲取，因為B可以將A的請求分發，對A來說，它不用知道它請求的資源具體位置，這是區別正向代理很重要的一個地方。</li>
+<li><strong>Tips</strong>:此處若鉆牛角尖，感覺正向和反向其實還是一樣的，若描述有紕漏，有緣看到的童鞋煩請指出。  </li>
+</ul>
+</li>
+<li><strong>Web服務器和應用服務器的區別是什麼</strong><br>web服務器一般只負責處理HTTP協議，只能發送靜態頁面內容，而JSP等動態內容需要交給其他程序，這個其它程序就是應用服務器。但應用服務器一般也支持HTTP協議，所以界限不是很清楚。<br>web服務器常見的有Nginx，Apache，IIS等，應用服務器包括WebLogic，JBoss,Tomcat等。            </li>
+<li><strong>什麼是nginx</strong><br>一句話，nginx是一個高性能的HTTP web服務器和<strong>反向代理</strong>服務器。    </li>
+<li><p><strong>為什麼使用Nginx或者說Nginx用在哪裡</strong><br>   傳統的web項目中，並發量小，以tomcat為例，用戶可直接訪問tomcat，tomcat直接返回數據給用戶。<br>   但並發量大時，肯定要解決並發問題。 傳統的負載均衡方式很容易想到可以多增加幾個tomcat，比如上傳圖片操作。  </p>
+<p>   <img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/tomcat-img.png" alt="">       </p>
+<p>假設，若把圖片上傳至tomcat1上了，當請求這個圖片時，若tomcat比較忙，則把請求交給tomcat2操作，若兩個tomcat之間數據還未來得及做同步，則請求失敗。  </p>
+<p>這時候可以建立一個專門的圖片服務器來解決該問題。如下圖。<br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/java/20180506021140.png" alt="">       </p>
+<p><strong>應用場景</strong></p>
+<ul>
+<li>http服務器，比如圖片等靜態資源服務器</li>
+<li>虛擬主機 可以在一台服務器上虛擬出多個網站</li>
+<li>反向代理，負載均衡  </li>
+</ul>
+</li>
+</ol>
+<h1 id="Nginx的安裝與配置"><a href="#Nginx的安裝與配置" class="headerlink" title="Nginx的安裝與配置"></a>Nginx的安裝與配置</h1><p>了解了什麼是nginx以後接下來看Windows下的安裝。windows下操作方便直觀，linux下處安裝方式不一樣外，其它方面應該和Windows差不多。<br><strong>安裝</strong>  </p>
+<p>首先去官網<a href="http://nginx.org/download/" target="_blank" rel="noopener">下載</a>Windows下nginx，版本這裡選擇nginx-1.9.8。解壓zip,然後到解壓的目錄下執行下列操作  </p>
+<pre><code>cd nginx-1.9.8
+start nginx  
+</code></pre><p>  或者到解壓目錄下直接點擊ngnix.exe就啟動了，打開瀏覽器輸入localhost會看到歡迎頁。<br>   <img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/demo1.png" alt="">  </p>
+<pre><code>nginx -s stop //快速停止
+nginx -s reload //重新加載配置文件
+nginx -s quit //正常退出nginx  
+</code></pre><p><strong>配置</strong><br>安裝目錄nginx-1.9.8/conf/有個nginx.conf文件，右鍵以txt的形式打開。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#user  nobody;</span><br><span class="line"></span><br><span class="line">#工作進程：數目。根據硬件調整，通常等於CPU或者2倍于CPU數量。</span><br><span class="line">worker_processes  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">#指定錯誤日誌存放路徑</span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#pid存放路徑,每個進程有一個唯一的pid  </span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">	#每個進程的最大連接數</span><br><span class="line">    worker_connections  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#設定http服務器</span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</span><br><span class="line">    #                  '$status $body_bytes_sent "$http_referer" '</span><br><span class="line">    #                  '"$http_user_agent" "$http_x_forwarded_for"';</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  <span class="number">65</span>;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       <span class="number">80</span>;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        #error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">        # redirect server error pages to the static page /50x.html</span><br><span class="line">        #</span><br><span class="line">        error_page   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /<span class="number">50</span>x.html;</span><br><span class="line">        location = /<span class="number">50</span>x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        # proxy the PHP scripts to Apache listening on 127.0.0.1:80</span><br><span class="line">        #</span><br><span class="line">        #location ~ \.php$ &#123;</span><br><span class="line">        #    proxy_pass   http://127.0.0.1;</span><br><span class="line">        #&#125;</span><br><span class="line"></span><br><span class="line">        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">        #</span><br><span class="line">        #location ~ \.php$ &#123;</span><br><span class="line">        #    root           html;</span><br><span class="line">        #    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">        #    fastcgi_index  index.php;</span><br><span class="line">        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span><br><span class="line">        #    include        fastcgi_params;</span><br><span class="line">        #&#125;</span><br><span class="line"></span><br><span class="line">        # deny access to .htaccess files, if Apache's document root</span><br><span class="line">        # concurs with nginx's one</span><br><span class="line">        #</span><br><span class="line">        #location ~ /\.ht &#123;</span><br><span class="line">        #    deny  all;</span><br><span class="line">        #&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # another virtual host using mix of IP-, name-, and port-based configuration</span><br><span class="line">    #</span><br><span class="line">    #server &#123;</span><br><span class="line">    #    listen       8000;</span><br><span class="line">    #    listen       somename:8080;</span><br><span class="line">    #    server_name  somename  alias  another.alias;</span><br><span class="line"></span><br><span class="line">    #    location / &#123;</span><br><span class="line">    #        root   html;</span><br><span class="line">    #        index  index.html index.htm;</span><br><span class="line">    #    &#125;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # HTTPS server</span><br><span class="line">    #</span><br><span class="line">    #server &#123;</span><br><span class="line">    #    listen       443 ssl;</span><br><span class="line">    #    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    #    ssl_certificate      cert.pem;</span><br><span class="line">    #    ssl_certificate_key  cert.key;</span><br><span class="line"></span><br><span class="line">    #    ssl_session_cache    shared:SSL:1m;</span><br><span class="line">    #    ssl_session_timeout  5m;</span><br><span class="line"></span><br><span class="line">    #    ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">    #    ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">    #    location / &#123;</span><br><span class="line">    #        root   html;</span><br><span class="line">    #        index  index.html index.htm;</span><br><span class="line">    #    &#125;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>小結：以上的配置屬性太多，用的時候再查，下面列出一些常用的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">worker_processes：工作进程个数，可配置多个</span><br><span class="line"></span><br><span class="line">worker_connections:单个进程最大连接数</span><br><span class="line"></span><br><span class="line">server:每一个server相当于一个代理服务器</span><br><span class="line"></span><br><span class="line">lister:监听端口，默认<span class="number">80</span></span><br><span class="line"></span><br><span class="line">server_name:当前服务的域名，可以有多个，用空格分隔(我们是本地所以是localhost)</span><br><span class="line"></span><br><span class="line">location：表示匹配的路径，这时配置了/表示所有请求都被匹配到这里</span><br><span class="line"></span><br><span class="line">index：当没有指定主页时，默认会选择这个指定的文件，可多个，空格分隔</span><br><span class="line"></span><br><span class="line">proxy_pass：请求转向自定义的服务器列表</span><br><span class="line"></span><br><span class="line">upstream name&#123; &#125;:服务器集群名称</span><br></pre></td></tr></table></figure></p>
+<h1 id="利用nginx實現反向代理"><a href="#利用nginx實現反向代理" class="headerlink" title="利用nginx實現反向代理"></a><strong>利用nginx實現反向代理</strong></h1><p>首先我們，啟動一個tomcat，這裡以tomcat8為例，啟動后在瀏覽器輸入：<a href="http://localhost:8081/" target="_blank" rel="noopener">http://localhost:8081/</a> ,會出現tomcat的歡迎頁。輸入<a href="http://localhost無法連接，如下" target="_blank" rel="noopener">http://localhost無法連接，如下</a>:</p>
+<p><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/demo2.png" alt="">  </p>
+<p>此時，我們更改nginx的配置文件，注釋掉原有的server{}里的內容替換為如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">       listen       <span class="number">80</span>;</span><br><span class="line">       server_name  localhost;</span><br><span class="line"></span><br><span class="line">	location / &#123;             					    </span><br><span class="line">                      proxy_pass http:<span class="comment">//localhost:8091;</span></span><br><span class="line"></span><br><span class="line">               &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然後在瀏覽器中輸入：<a href="http://localhost,即可出現和http://localhost:8081/一樣的效果，nginx成為了localhost和localhost:8081之間的反向代理。" target="_blank" rel="noopener">http://localhost,即可出現和http://localhost:8081/一樣的效果，nginx成為了localhost和localhost:8081之間的反向代理。</a><br><img src="https://coding.net/u/sukianata/p/ImgRepository/git/raw/master/other/demo3.png" alt="">    </p>
+<h1 id="使用Nginx實現負載均衡"><a href="#使用Nginx實現負載均衡" class="headerlink" title="使用Nginx實現負載均衡"></a><strong>使用Nginx實現負載均衡</strong></h1><p>  負載均衡即將請求均衡的分發到各個服務器中。<br>  首先讓兩個tomcat運行起來，這裡運行時tomcat6和tomcat8，端口分別是8098和8081。<br>  接下來修改nginx配置文件，首先在server外定義一個服務器集群，集群名字取為test<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream test&#123;</span><br><span class="line">	server localhost:<span class="number">8081</span>;</span><br><span class="line">	server localhost:<span class="number">8098</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p> 然後修改server中location配置如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">	proxy_pass http:<span class="comment">//test            </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>重啟Nginx，多刷新幾次，可以看到在tomcat6和tomcat8兩個歡迎頁面之間來回切換。<br>現實中，如果其中一個tomcat掛掉了，還有一個可以運行，更新時也可以輪流更新，還可以有效緩解服務器壓力。<br>提出一個問題：假如在tomcat1上登錄了，這時session在tomcat1上，當再次請求時，如果請求被分到tomcat2上，tomcat2則會認為還未登錄，解決這個問題需要將session在兩個tomcat之間共享，共享方法待補充。  </p>
+<blockquote>
+<p><strong>備註：所有資料來源于網絡，供學習、記錄、交流用。</strong></p>
+</blockquote>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="HuangFan 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx-java/" rel="tag"># nginx,java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/31/javaweb/" rel="next" title="javaweb">
+                <i class="fa fa-chevron-left"></i> javaweb
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/11/HashMap的實現原理/" rel="prev" title="HashMap的實現原理">
+                HashMap的實現原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNjgwNy8xMzM0Mw=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">HuangFan</p>
+              <p class="site-description motion-element" itemprop="description">Java</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/Tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/man-tou-hao-chi-bu/activities" target="_blank" title="知乎" rel="external nofollow"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什麼是ngnix"><span class="nav-number">1.</span> <span class="nav-text">什麼是ngnix</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx的安裝與配置"><span class="nav-number">2.</span> <span class="nav-text">Nginx的安裝與配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#利用nginx實現反向代理"><span class="nav-number">3.</span> <span class="nav-text">利用nginx實現反向代理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用Nginx實現負載均衡"><span class="nav-number">4.</span> <span class="nav-text">使用Nginx實現負載均衡</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HuangFan</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+</html>
